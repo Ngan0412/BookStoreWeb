@@ -1,0 +1,46 @@
+﻿﻿
+<div id="sidebar">
+    <DxMenu Orientation="@Orientation.Vertical" CssClass="menu">
+        <Items>
+            <DxMenuItem NavigateUrl="/admin/book" Text="Book" CssClass="menu-item" IconCssClass="icon fa fa-book"></DxMenuItem>
+
+            <DxMenuItem NavigateUrl="/admin/order" Text="Order" CssClass="menu-item" IconCssClass="icon fa fa-shopping-cart"></DxMenuItem>
+
+            <DxMenuItem NavigateUrl="/admin/category" Text="Category" CssClass="menu-item" IconCssClass="icon fa fa-tags"></DxMenuItem>
+
+            <DxMenuItem NavigateUrl="/admin/customer" Text="Customer" CssClass="menu-item" IconCssClass="icon fa fa-users"></DxMenuItem>
+
+            <DxMenuItem NavigateUrl="/admin/promotion" Text="Promotion" CssClass="menu-item" IconCssClass="icon fa fa-bullhorn"></DxMenuItem>
+
+            <DxMenuItem NavigateUrl="/admin/staff" Text="Staff" CssClass="menu-item" IconCssClass="icon fa fa-user-tie"></DxMenuItem>
+
+            <DxMenuItem NavigateUrl="/admin/author" Text="Author" CssClass="menu-item" IconCssClass="icon fa fa-pen-nib"></DxMenuItem>
+
+            <DxMenuItem NavigateUrl="/admin/publisher" Text="Publisher" CssClass="menu-item" IconCssClass="icon fa fa-building"></DxMenuItem>
+
+            <DxMenuItem NavigateUrl="/admin/setting" Text="Log Out" CssClass="menu-item" IconCssClass="icon fa fa-sign-out-alt"></DxMenuItem>
+
+        </Items>
+    </DxMenu>
+</div>
+<style>
+    .menu-item {
+        color: white !important; /* Màu chữ */
+        font-family: 'Segoe UI', sans-serif; /* Font chữ */
+        font-size: 16px; /* Cỡ chữ */
+        font-weight: 500; /* Độ đậm */
+    }
+
+    .home-icon {
+        background-image: url(images/home.svg);
+        filter: brightness(100%) saturate(100%);
+    }
+
+    .counter-icon {
+        background-image: url(images/home.svg);
+        filter: brightness(100%) saturate(100%);
+    }
+</style>
+@code{
+
+}

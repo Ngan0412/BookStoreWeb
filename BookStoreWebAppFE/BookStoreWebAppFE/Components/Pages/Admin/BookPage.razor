@@ -1,0 +1,506 @@
+﻿@page "/admin/book"
+
+@using BookStoreWebAppFE.Models
+@inject HttpClient Http
+@using DevExpress.Blazor
+@rendermode InteractiveServer
+@using BookStoreWebAppFE.Services
+@inject IAuthenticationService authenticationService
+
+<div class="d-flex align-items-center custom-toast-background">
+    <DxToastProvider Name="Overview"
+    MaxToastCount="5"
+    AnimationType="ToastAnimationType.Slide"
+    HorizontalAlignment="HorizontalAlignment.Right"
+    VerticalAlignment="VerticalEdge.Top"
+    DisplayTime="TimeSpan.Zero"
+    Width="320px" />
+</div>
+<PageTitle>Book</PageTitle>
+<h1>Book</h1>
+
+@if (ListGrid == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <DxGrid Data="@ListGrid" style="height:70vh;"
+    PageSize="10"
+    PageSizeSelectorItems="@ListPage"
+    ShowFilterRow="true"
+    PagerVisible="true"
+    CustomizeEditModel="OnCustomizeEditModel"
+    EditModelSaving="OnEditModelSaving"
+    DataItemDeleting="OnDataItemDeleting"
+    KeyFieldName="Isbn"
+    EditMode="GridEditMode.PopupEditForm"
+    FocusedRowEnabled=true
+    PopupEditFormCssClass="my-style"
+    PopupEditFormHeaderText="@title"
+    @ref=MyGrid>
+        <Columns>
+            <!-- Cột ID, kiểu uniqueidentifier -->
+            <DxGridDataColumn Caption="ID" FieldName="Id" Visible="false" />
+
+            <!-- Cột ISBN, kiểu char -->
+            <DxGridDataColumn Caption="ISBN" FieldName="Isbn" Width="100" />
+
+            <!-- Cột Title, kiểu nvarchar -->
+            <DxGridDataColumn Caption="Title" FieldName="Title" Width="200" />
+
+            <!-- Cột Category ID, kiểu uniqueidentifier -->
+            <DxGridDataColumn Caption="Category">
+                <FilterRowCellTemplate>
+                    <DxComboBox Data="@categories"
+                                @bind-Value="filterCategory"
+                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                    TextFieldName="@nameof(selectedCategory.Name)"
+                    SelectedItemChanged="(Category value)=>SelectedCategoryFilter(value)">
+                    </DxComboBox>
+                </FilterRowCellTemplate>
+                <CellDisplayTemplate>
+                    @{
+                        var data = (Book)context.DataItem;
+                        string categoryName = categories?.FirstOrDefault(c => c.Id == data.categoryId) is { Name: var name } ? name : string.Empty;
+                    }
+                    <span>@categoryName</span>
+                </CellDisplayTemplate>
+            </DxGridDataColumn>
+
+            <!-- Cột Author ID, kiểu uniqueidentifier -->
+            <DxGridDataColumn Caption="Author">
+                <FilterRowCellTemplate>
+                    <DxComboBox Data="@authors"
+                    @bind-Value="filterAuthor"
+                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                    TextFieldName="@nameof(selectedAuthor.Name)"
+                        SelectedItemChanged="(Author value)=>SelectedAuthorFilter(value)">
+                    </DxComboBox>
+                </FilterRowCellTemplate>
+                <CellDisplayTemplate>
+                    @{
+                        var data = (Book)context.DataItem;
+                        string author = authors?.FirstOrDefault(c => c.id == data.authorId) is { Name: var name } ? name : string.Empty;
+                    }
+                    <span>@author</span>
+                </CellDisplayTemplate>
+            </DxGridDataColumn>
+
+            <!-- Cột Publisher ID, kiểu uniqueidentifier -->
+            <DxGridDataColumn Caption="Publisher">
+                <FilterRowCellTemplate>
+                    <DxComboBox Data="@publishers"
+                                @bind-Value="filterPublisher"
+                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                    TextFieldName="@nameof(selectedPublisher.Name)"
+                        SelectedItemChanged="(Publisher value)=>SelectedPublisherFilter(value)">
+                    </DxComboBox>
+                </FilterRowCellTemplate>
+                <CellDisplayTemplate>
+                    @{
+                        var data = (Book)context.DataItem;
+                        string publisher = publishers?.FirstOrDefault(c => c.id == data.publisherId) is { Name: var name } ? name : string.Empty;
+                    }
+                    <span>@publisher</span>
+                </CellDisplayTemplate>
+            </DxGridDataColumn>
+
+            <!-- Cột Year of Publication, kiểu smallint -->
+            <DxGridDataColumn Caption="Year of Publication" FieldName="YearOfPublication" Width="80"/>
+
+            <!-- Cột Price, kiểu decimal -->
+            <DxGridDataColumn Caption="Price" FieldName="Price" Width="80"/>
+
+            <!-- Cột Image, kiểu varchar -->
+            <!-- Cột Quantity, kiểu int -->
+            <DxGridDataColumn Caption="Quantity" FieldName="Quantity" Width="80" DisplayFormat="N0" />
+            <DxGridDataColumn Caption="Is Delete" FieldName="isDeleted" Width="80" />
+            <DxGridDataColumn Caption="Image" >
+                <CellDisplayTemplate>
+                    @{
+                        var data = (Book)context.DataItem;
+
+                    }
+                    <img src="@data.Image" style="width: 100px; height:100px;"/>
+                </CellDisplayTemplate>
+            </DxGridDataColumn>
+        </Columns>
+
+        <ToolbarTemplate>
+            <DxToolbar>
+                <DxToolbarItem Text="Create"
+                IconCssClass="oi oi-plus"
+                CssClass="me-2 create HButton"
+                Click="OnCreateNew"/>
+
+                <DxToolbarItem Text="Edit"
+                IconCssClass="oi oi-pencil"
+                CssClass="me-2 edit HButton"
+                Click="OnEdit" />
+
+                <DxToolbarItem Text="Delete"
+                IconCssClass="oi oi-trash"
+                CssClass="me-2 delete HButton"
+                Click="OnDelete" />
+
+                <DxToolbarItem Text="Column Chooser"
+                IconCssClass="oi oi-cog"
+                CssClass="column-chooser-button ms-3 chooser-column HButton"
+                BeginGroup="true"
+                Click="OnShowColumnChooser" />
+            </DxToolbar>
+        </ToolbarTemplate>
+        <EditFormTemplate Context="editFormContext">
+            <DxFormLayout CssClass="my-form-layout">
+                <div class="row">
+                    <!-- ISBN -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="ISBN:" CssClass="custom-item">
+                            <DxTextBox @bind-Text="@selectedItem.Isbn" Enabled="@enableEdit" CssClass="form-control-solid control" />
+                            <ValidationMessage For="@(() => selectedItem.Isbn)" />
+                        </DxFormLayoutItem>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Title:" CssClass="custom-item">
+                            <DxTextBox @bind-Text="@selectedItem.Title" CssClass="form-control-solid control" />
+                            <ValidationMessage For="@(() => selectedItem.Title)" />
+                        </DxFormLayoutItem>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Category:" CssClass="custom-item">
+                            <DxComboBox Data="@categories"
+                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                            @bind-Value="@selectedItem.categoryId"
+                            TextFieldName="@nameof(selectedCategory.Name)"
+                            ValueFieldName="@nameof(selectedCategory.Id)" />
+                            <ValidationMessage For="@(() => selectedItem.categoryId)" />
+                        </DxFormLayoutItem>
+                    </div>
+
+                    <!-- Author -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Author:" CssClass="custom-item">
+                            <DxComboBox Data="@authors"
+                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                            @bind-Value="@selectedItem.authorId"
+                            TextFieldName="@nameof(selectedAuthor.Name)"
+                            ValueFieldName="@nameof(selectedAuthor.id)" />
+                            <ValidationMessage For="@(() => selectedItem.authorId)" />
+                        </DxFormLayoutItem>
+                    </div>
+
+                    <!-- Publisher -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Publisher:" CssClass="custom-item">
+                            <DxComboBox Data="@publishers"
+                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                            @bind-Value="@selectedItem.publisherId"
+                            TextFieldName="@nameof(selectedPublisher.Name)"
+                            ValueFieldName="@nameof(selectedPublisher.id)" />
+                            <ValidationMessage For="@(() => selectedItem.publisherId)" />
+
+                        </DxFormLayoutItem>
+                    </div>
+
+                    <!-- Year of Publication -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Year of Publication:">
+                            <DxSpinEdit @bind-Value="@selectedItem.YearOfPublication" MinValue="1901" MaxValue="2100" style="min-width:100px;"/>
+                        </DxFormLayoutItem>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Quantity:" CssClass="custom-item">
+                            <DxSpinEdit @bind-Value="@selectedItem.Quantity" MinValue="0" />
+                        </DxFormLayoutItem>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Price:" CssClass="custom-item">
+                            <DxSpinEdit @bind-Value="@selectedItem.Price" DisplayFormat="N0" MinValue="10000" />
+                        </DxFormLayoutItem>
+                    </div>
+
+                    <!-- Image -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Image URL:" CssClass="custom-item">
+                            <DxTextBox @bind-Text="@selectedItem.Image" CssClass="form-control-solid control" />
+                            <ValidationMessage For="@(() => selectedItem.Image)" />
+                        </DxFormLayoutItem>
+                    </div>
+
+                    <!-- Is Deleted -->
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Is Deleted:" CssClass="custom-item">
+                            <DxCheckBox @bind-Checked="@selectedItem.isDeleted" />
+                        </DxFormLayoutItem>
+                    </div>
+                </div>
+            </DxFormLayout>
+        </EditFormTemplate>
+    </DxGrid>
+}
+
+@code {
+    string urlGrid = "api/book";
+    string urlCategory = "api/category";
+    string urlAuthor = "api/author";
+    string urlPublisher = "api/publisher";
+    String title { get; set; } = "";
+    bool enableEdit { get; set; } = true;
+    List<int> ListPage = new List<int> { 10, 20, 30, 50, 100 };
+    [Inject] IToastNotificationService ToastService { get; set; }
+    List<Book>? ListGrid { get; set; } = new();
+    List<Book>? ListBook { get; set; } = new();
+    Book selectedItem { get; set; } = new();
+    List<Category>? categories { get; set; } = new();
+    Category? selectedCategory { get; set; } = new();
+    Category? filterCategory { get; set; }
+    List<Author>? authors { get; set; } = new();
+    Author? selectedAuthor { get; set; } = new();
+    Author? filterAuthor { get; set; }
+    List<Publisher>? publishers { get; set; } = new();
+    Publisher? selectedPublisher { get; set; } = new();
+    Publisher? filterPublisher { get; set; }
+    IGrid MyGrid { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        loadCategory();
+        loadAuthor();
+        loadPublisher();
+        loadData();
+        StateHasChanged();
+    }
+    async void loadData()
+    {
+        var result = await Http.GetFromJsonAsync<List<Book>>(urlGrid);
+        ListBook = result.ToList();
+		ListGrid = ListBook.ToList();
+        StateHasChanged();
+    }
+    async void loadCategory()
+    {
+        var result = await Http.GetFromJsonAsync<List<Category>>(urlCategory);
+        categories = result.Where(data => data.IsDeleted == false).ToList();
+        StateHasChanged();
+    }
+    async void loadAuthor()
+    {
+        var result = await Http.GetFromJsonAsync<List<Author>>(urlAuthor);
+        authors = result.Where(data => data.IsDeleted == false).ToList();
+        StateHasChanged();
+    }
+    async void loadPublisher()
+    {
+        var result = await Http.GetFromJsonAsync<List<Publisher>>(urlPublisher);
+        publishers = result.Where(data => data.IsDeleted == false).ToList();
+        StateHasChanged();
+    }
+
+    void OnCustomizeEditModel(GridCustomizeEditModelEventArgs e)
+    {
+        selectedItem = (Book)e.EditModel;
+        if (e.IsNew)
+        {
+            title = "Create form";
+            enableEdit = true;
+            selectedCategory = new();
+        }
+        else
+        {
+            selectedCategory = categories?.FirstOrDefault(c => c.Id == selectedItem.categoryId);    
+            selectedAuthor = authors?.FirstOrDefault(c => c.id == selectedItem.authorId);    
+            selectedPublisher = publishers?.FirstOrDefault(c => c.id == selectedItem.publisherId);    
+            title = "Edit form";
+            enableEdit = false;
+        }
+        StateHasChanged();
+    }
+    async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
+    {
+        HttpResponseMessage response;
+        if (e.IsNew)
+        {
+            // Tạo mới
+            selectedItem = (Book)e.EditModel;
+            response = await Http.PostAsJsonAsync(urlGrid, selectedItem);
+
+        }
+        else
+        {
+            // Sửa
+            // e.CopyChangesToDataItem(); Copy từ model vào data item hiển thị
+            selectedItem = (Book)e.EditModel;
+            response = await Http.PutAsJsonAsync($"{urlGrid}/{selectedItem.Isbn}", selectedItem);
+
+        }
+        var result = await response.Content.ReadFromJsonAsync<ApiMessageResponse>();
+        if (response.IsSuccessStatusCode)
+        {
+            // ✅ Đọc nội dung trả về từ API
+
+            ToastService.ShowToast(new ToastOptions() // SUCCESS
+                {
+                    ProviderName = "Overview",
+                    ThemeMode = ToastThemeMode.Saturated,
+                    RenderStyle = ToastRenderStyle.Success,
+                    Title = $"{result?.Message}",
+                });
+        }
+        else{
+            ToastService.ShowToast(new ToastOptions() //ERROR
+                {
+                    ProviderName = "Overview",
+                    ThemeMode = ToastThemeMode.Saturated,
+                    RenderStyle = ToastRenderStyle.Danger,
+                    Title = $"{result?.Message}"
+                });
+        }
+        // ToastService.ShowToast(new ToastOptions()WARNING
+        //     {
+        //         ProviderName = "Overview",
+        //         ThemeMode = ToastThemeMode.Light,
+        //         RenderStyle = ToastRenderStyle.Warning,
+        //         Title = "Cannot open file",
+        //     });
+        // ToastService.ShowToast(new ToastOptions() ERROR
+        //     {
+        //         ProviderName = "Overview",
+        //         ThemeMode = ToastThemeMode.Saturated,
+        //         RenderStyle = ToastRenderStyle.Danger,
+        //         Title = "Job failed: 'validation'"
+        //     });
+        // ToastService.ShowToast(new ToastOptions() SUCCESS
+        //     {
+        //         ProviderName = "Overview",
+        //         ThemeMode = ToastThemeMode.Saturated,
+        //         RenderStyle = ToastRenderStyle.Success,
+        //         Title = "File download complete"
+        //     }); 
+        loadData();
+    }
+
+    async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
+    {
+        var item = (Book)e.DataItem;
+        var response = await Http.DeleteAsync($"{urlGrid}/{item.id}");
+        var result = await response.Content.ReadFromJsonAsync<ApiMessageResponse>();
+        if (response.IsSuccessStatusCode)
+        {
+            // ✅ Đọc nội dung trả về từ API
+
+            ToastService.ShowToast(new ToastOptions() // SUCCESS
+                {
+                    ProviderName = "Overview",
+                    ThemeMode = ToastThemeMode.Saturated,
+                    RenderStyle = ToastRenderStyle.Success,
+                    Title = $"{result?.Message}",
+                });
+        }
+        else
+        {
+            ToastService.ShowToast(new ToastOptions() //ERROR
+                {
+                    ProviderName = "Overview",
+                    ThemeMode = ToastThemeMode.Saturated,
+                    RenderStyle = ToastRenderStyle.Danger,
+                    Title = $"{result?.Message}"
+                });
+        }
+        loadData();
+    }
+
+    async Task OnCreateNew(ToolbarItemClickEventArgs e)
+    {
+        await MyGrid.StartEditNewRowAsync();
+    }
+
+    async Task OnEdit(ToolbarItemClickEventArgs e)
+    {
+        if (MyGrid.GetFocusedDataItem() != null)
+            await MyGrid.StartEditDataItemAsync(MyGrid.GetFocusedDataItem());
+    }
+
+    void OnDelete(ToolbarItemClickEventArgs e)
+    {
+        if (MyGrid.GetFocusedDataItem() != null)
+            MyGrid.ShowDataItemDeleteConfirmation(MyGrid.GetFocusedDataItem());
+    }
+
+    void OnShowColumnChooser()
+    {
+        MyGrid.ShowColumnChooser(".column-chooser-button");
+    }
+    public class ApiMessageResponse
+    {
+        public string Message { get; set; }
+    }
+    async void SelectedCategoryFilter(Category value)
+    {
+        filterCategory = value;
+        if (value != null)
+        {
+            ListGrid = ListBook.Where(x => x.categoryId == value.Id).ToList();
+        }
+        else
+        {
+			ListGrid = ListBook.ToList();
+        }
+        if (filterAuthor != null){
+            ListGrid = ListGrid.Where(x => x.authorId == filterAuthor.id).ToList();
+        }
+        if (filterPublisher != null){
+            ListGrid = ListGrid.Where(x => x.publisherId == filterPublisher.id).ToList();
+        }
+        StateHasChanged();
+    }
+    async void SelectedAuthorFilter(Author value)
+    {
+        filterAuthor = value;
+        if (value != null)
+        {
+            ListGrid = ListGrid.Where(x => x.authorId == value.id).ToList();          
+        }
+        else
+        {
+            ListGrid = ListBook.ToList();
+        }
+        if (filterCategory != null)
+        {
+            ListGrid = ListGrid.Where(x => x.categoryId == filterCategory.Id).ToList();
+        }
+        if (filterPublisher != null)
+        {
+            ListGrid = ListGrid.Where(x => x.publisherId == filterPublisher.id).ToList();
+        }
+		StateHasChanged();
+    }
+    async void SelectedPublisherFilter(Publisher value)
+    {
+        filterPublisher = value;
+        if (value != null)
+        {
+            ListGrid = ListGrid.Where(x => x.publisherId == value.id).ToList();
+        }
+        else
+        {
+            ListGrid = ListBook.ToList();
+        }
+        if (filterCategory != null)
+        {
+            ListGrid = ListGrid.Where(x => x.categoryId == filterCategory.Id).ToList();
+        }
+        if (filterAuthor != null)
+        {
+            ListGrid = ListGrid.Where(x => x.authorId == filterAuthor.id).ToList();
+        }
+        StateHasChanged();
+    }
+}

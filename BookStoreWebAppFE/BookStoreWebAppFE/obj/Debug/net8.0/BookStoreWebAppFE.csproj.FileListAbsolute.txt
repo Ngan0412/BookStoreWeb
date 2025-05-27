@@ -102,3 +102,4 @@ C:\DaiCa\Project\Web\BookStoreWebAppFE\BookStoreWebAppFE\BookStoreWebAppFE\bin\D
 C:\DaiCa\Project\Web\BookStoreWebAppFE\BookStoreWebAppFE\BookStoreWebAppFE\bin\Debug\net8.0\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll
 C:\DaiCa\Project\Web\BookStoreWebAppFE\BookStoreWebAppFE\BookStoreWebAppFE\bin\Debug\net8.0\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
 C:\DaiCa\Project\Web\BookStoreWebAppFE\BookStoreWebAppFE\BookStoreWebAppFE\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\DaiCa\Project\Web\BookStoreWebAppFE\BookStoreWebAppFE\BookStoreWebAppFE\obj\Debug\net8.0\BookStoreWebAppFE.sourcelink.json

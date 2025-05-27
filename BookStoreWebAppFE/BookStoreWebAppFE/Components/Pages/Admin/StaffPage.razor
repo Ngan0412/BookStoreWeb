@@ -42,6 +42,7 @@ else
             <DxGridDataColumn Caption="Family Name" FieldName="FamilyName" />
             <DxGridDataColumn Caption="Given Name" FieldName="GivenName" />
             <DxGridDataColumn Caption="Phone" FieldName="Phone" />
+            <DxGridDataColumn Caption="Email" FieldName="Email" />
             <DxGridDataColumn Caption="Address" FieldName="Address" />
             <DxGridDataColumn Caption="Citizen Identification" FieldName="CitizenIdentification" />
             <DxGridDataColumn Caption="Gender">
@@ -53,6 +54,17 @@ else
                 </CellDisplayTemplate>
             </DxGridDataColumn>
             <DxGridDataColumn Caption="Date Of Birth" FieldName="DateOfBirth" />
+            <DxGridDataColumn Caption="Role">
+                <CellDisplayTemplate>
+                    @{
+                        var item = (Staff)context.DataItem;
+                        <span>@(item.Role ? "Admin" : "Employee")</span>
+                    }
+                </CellDisplayTemplate>
+            </DxGridDataColumn>
+
+            <DxGridDataColumn Caption="Is Actived" FieldName="IsActived" />
+            <DxGridDataColumn Caption="Is Deleted" FieldName="IsDeleted" />
             
         </Columns>
         <ToolbarTemplate>
@@ -60,7 +72,7 @@ else
                 <DxToolbarItem Text="Create"
                 IconCssClass="oi oi-plus"
                 CssClass="me-2 create HButton"
-                Click="OnCreateNew" />
+                Click="OnCreateNew" Visible= "false"/>
 
                 <DxToolbarItem Text="Edit"
                 IconCssClass="oi oi-pencil"

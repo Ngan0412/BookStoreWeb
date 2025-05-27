@@ -17,7 +17,7 @@ namespace BookStoreWebAppFE.Models
         public double discountPercent { get; set; }
 
         public int quantity { get; set; }
-        public bool isDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
     }
 

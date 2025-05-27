@@ -7,12 +7,12 @@
 
 <div class="d-flex align-items-center custom-toast-background">
     <DxToastProvider Name="Overview"
-                     MaxToastCount="5"
-                     AnimationType="ToastAnimationType.Slide"
-                     HorizontalAlignment="HorizontalAlignment.Right"
-                     VerticalAlignment="VerticalEdge.Top"
-                     DisplayTime="TimeSpan.Zero"
-                     Width="320px" />
+    MaxToastCount="5"
+    AnimationType="ToastAnimationType.Slide"
+    HorizontalAlignment="HorizontalAlignment.Right"
+    VerticalAlignment="VerticalEdge.Top"
+    DisplayTime="TimeSpan.Zero"
+    Width="320px" />
 </div>
 <PageTitle>Promotion</PageTitle>
 <h1>Promotion</h1>
@@ -24,19 +24,19 @@
 else
 {
     <DxGrid Data="@ListGrid" style="height:50vh;"
-            PageSize="10"
-            PageSizeSelectorItems="@ListPage"
-            ShowFilterRow="true"
-            PagerVisible="true"
-            CustomizeEditModel="OnCustomizeEditModel"
-            EditModelSaving="OnEditModelSaving"
-            DataItemDeleting="OnDataItemDeleting"
-            KeyFieldName="PromotionId"
-            EditMode="GridEditMode.PopupEditForm"
-            FocusedRowEnabled=true
-            PopupEditFormCssClass="my-style"
-            PopupEditFormHeaderText="@title"
-            @ref=MyGrid>
+    PageSize="10"
+    PageSizeSelectorItems="@ListPage"
+    ShowFilterRow="true"
+    PagerVisible="true"
+    CustomizeEditModel="OnCustomizeEditModel"
+    EditModelSaving="OnEditModelSaving"
+    DataItemDeleting="OnDataItemDeleting"
+    KeyFieldName="id"
+    EditMode="GridEditMode.PopupEditForm"
+    FocusedRowEnabled=true
+    PopupEditFormCssClass="my-style"
+    PopupEditFormHeaderText="@title"
+    @ref=MyGrid>
         <Columns>
             <DxGridDataColumn Caption="ID" FieldName="id" />
             <DxGridDataColumn Caption="Promotion Name" FieldName="name" />
@@ -45,37 +45,38 @@ else
             <DxGridDataColumn Caption="Condition" FieldName="condition" />
             <DxGridDataColumn Caption="Discount (%)" FieldName="discountPercent" />
             <DxGridDataColumn Caption="Quantity" FieldName="quantity" />
+            <DxGridDataColumn Caption="Is Deleted" FieldName="IsDeleted" />
         </Columns>
         <ToolbarTemplate>
             <DxToolbar>
                 <DxToolbar>
                     <DxToolbarItem Text="Create"
-                                   IconCssClass="oi oi-plus"
-                                   CssClass="me-2 create HButton"
-                                   Click="OnCreateNew" />
+                    IconCssClass="oi oi-plus"
+                    CssClass="me-2 create HButton"
+                    Click="OnCreateNew" />
 
                     <DxToolbarItem Text="Edit"
-                                   IconCssClass="oi oi-pencil"
-                                   CssClass="me-2 edit HButton"
-                                   Click="OnEdit" />
+                    IconCssClass="oi oi-pencil"
+                    CssClass="me-2 edit HButton"
+                    Click="OnEdit" />
 
                     <DxToolbarItem Text="Delete"
-                                   IconCssClass="oi oi-trash"
-                                   CssClass="me-2 delete HButton"
-                                   Click="OnDelete" />
+                    IconCssClass="oi oi-trash"
+                    CssClass="me-2 delete HButton"
+                    Click="OnDelete" />
 
                     <DxToolbarItem Text="Column Chooser"
-                                   IconCssClass="oi oi-cog"
-                                   CssClass="column-chooser-button ms-3 chooser-column HButton"
-                                   BeginGroup="true"
-                                   Click="OnShowColumnChooser" />
+                    IconCssClass="oi oi-cog"
+                    CssClass="column-chooser-button ms-3 chooser-column HButton"
+                    BeginGroup="true"
+                    Click="OnShowColumnChooser" />
                 </DxToolbar>
             </DxToolbar>
         </ToolbarTemplate>
         <EditFormTemplate Context="editFormContext">
             <DxFormLayout CssClass="my-form-layout">
                 <div class="row">
-                    
+
                     <div class="col-lg-6 col-sm-12">
                         <DxFormLayoutItem Caption="Promotion Name:" CssClass="custom-item">
                             <DxTextBox @bind-Text="@selectedItem.name" CssClass="form-control-solid control" />
@@ -232,6 +233,7 @@ else
         //         Title = "File download complete"
         //     });
         loadData();
+        StateHasChanged();
     }
 
     async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
@@ -262,6 +264,7 @@ else
                 });
         }
         loadData();
+        StateHasChanged();
     }
 
     async Task OnCreateNew(ToolbarItemClickEventArgs e)

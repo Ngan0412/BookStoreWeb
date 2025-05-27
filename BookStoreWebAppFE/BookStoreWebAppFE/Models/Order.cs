@@ -6,9 +6,7 @@ namespace BookStoreWebAppFE.Models
     public partial class Order 
     {
         public Guid id { get; set; }
-        [GuidNotEmpty(ErrorMessage = "Không Được Để Trống!")]
         public Guid StaffId { get; set; }
-        [GuidNotEmpty(ErrorMessage = "Không Được Để Trống!")]
 
         public Guid CustomerId { get; set; }
 

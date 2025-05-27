@@ -31,14 +31,14 @@ else
             CustomizeEditModel="OnCustomizeEditModel"
             EditModelSaving="OnEditModelSaving"
             DataItemDeleting="OnDataItemDeleting"
-            KeyFieldName="Id"
+            KeyFieldName="id"
             EditMode="GridEditMode.PopupEditForm"
             FocusedRowEnabled=true
             PopupEditFormCssClass="my-style"
             PopupEditFormHeaderText="@title"
             @ref=MyGrid>
         <Columns>
-            <DxGridDataColumn Caption="Id" FieldName="Id" />
+            <DxGridDataColumn Caption="Id" FieldName="id" />
             <DxGridDataColumn Caption="Name" FieldName="Name" />
             <DxGridDataColumn Caption="Is Delete" FieldName="IsDeleted" Width="80" />
         </Columns>
@@ -138,7 +138,7 @@ else
             // Sửa
             // e.CopyChangesToDataItem(); Copy từ model vào data item hiển thị
             selectedItem = (Category)e.EditModel;
-            response = await Http.PutAsJsonAsync($"{urlGrid}/{selectedItem.Id}", selectedItem);
+            response = await Http.PutAsJsonAsync($"{urlGrid}/{selectedItem.id}", selectedItem);
 
         }
         var result = await response.Content.ReadFromJsonAsync<ApiMessageResponse>();
@@ -192,7 +192,7 @@ else
     async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
     {
         var item = (Category)e.DataItem;
-        var response = await Http.DeleteAsync($"{urlGrid}/{item.Id}");
+        var response = await Http.DeleteAsync($"{urlGrid}/{item.id}");
         var result = await response.Content.ReadFromJsonAsync<ApiMessageResponse>();
         if (response.IsSuccessStatusCode)
         {

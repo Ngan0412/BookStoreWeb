@@ -106,12 +106,6 @@
                     <NavLink href="@UrlGenerator.GetUrl(new Uri(NavigationManager.Uri).LocalPath, !ToggledSidebar)">
                         <DxButton RenderStyle="@ButtonRenderStyle.Secondary" RenderStyleMode="@ButtonRenderStyleMode.Text" CssClass="menu-button" IconCssClass="icon icon-menu"></DxButton>
                     </NavLink>
-                    @if (new Uri(NavigationManager.Uri).LocalPath != "/")
-                    {
-                        <NavLink href="@UrlGenerator.GetUrl("/", ToggledSidebar)" class="button-link hidden">
-                            <DxButton RenderStyle="@ButtonRenderStyle.Dark" Text="Back to Home" RenderStyleMode="@ButtonRenderStyleMode.Text" CssClass="menu-button-nav" IconCssClass="icon icon-back"></DxButton>
-                        </NavLink>
-                    }
                 </div>
                 <div class="p-4">
                     @Body

@@ -62,7 +62,7 @@ else
                 <CellDisplayTemplate>
                     @{
                         var data = (Book)context.DataItem;
-                        string categoryName = categories?.FirstOrDefault(c => c.Id == data.categoryId) is { Name: var name } ? name : string.Empty;
+                        string categoryName = categories?.FirstOrDefault(c => c.id == data.categoryId) is { Name: var name } ? name : string.Empty;
                     }
                     <span>@categoryName</span>
                 </CellDisplayTemplate>
@@ -177,7 +177,7 @@ else
                             SearchFilterCondition="ListSearchFilterCondition.Contains"
                             @bind-Value="@selectedItem.categoryId"
                             TextFieldName="@nameof(selectedCategory.Name)"
-                            ValueFieldName="@nameof(selectedCategory.Id)" />
+                            ValueFieldName="@nameof(selectedCategory.id)" />
                             <ValidationMessage For="@(() => selectedItem.categoryId)" />
                         </DxFormLayoutItem>
                     </div>
@@ -315,7 +315,7 @@ else
         }
         else
         {
-            selectedCategory = categories?.FirstOrDefault(c => c.Id == selectedItem.categoryId);    
+            selectedCategory = categories?.FirstOrDefault(c => c.id == selectedItem.categoryId);    
             selectedAuthor = authors?.FirstOrDefault(c => c.id == selectedItem.authorId);    
             selectedPublisher = publishers?.FirstOrDefault(c => c.id == selectedItem.publisherId);    
             title = "Edit form";
@@ -447,7 +447,7 @@ else
         filterCategory = value;
         if (value != null)
         {
-            ListGrid = ListBook.Where(x => x.categoryId == value.Id).ToList();
+            ListGrid = ListBook.Where(x => x.categoryId == value.id).ToList();
         }
         else
         {
@@ -474,7 +474,7 @@ else
         }
         if (filterCategory != null)
         {
-            ListGrid = ListGrid.Where(x => x.categoryId == filterCategory.Id).ToList();
+            ListGrid = ListGrid.Where(x => x.categoryId == filterCategory.id).ToList();
         }
         if (filterPublisher != null)
         {
@@ -495,7 +495,7 @@ else
         }
         if (filterCategory != null)
         {
-            ListGrid = ListGrid.Where(x => x.categoryId == filterCategory.Id).ToList();
+            ListGrid = ListGrid.Where(x => x.categoryId == filterCategory.id).ToList();
         }
         if (filterAuthor != null)
         {

@@ -40,6 +40,7 @@ else
         <Columns>
             <DxGridDataColumn Caption="Id" FieldName="id" />
             <DxGridDataColumn Caption="Name" FieldName="Name" />
+            <DxGridDataColumn Caption="Is Deleted" FieldName="IsDeleted" />
 
         </Columns>
         <ToolbarTemplate>
@@ -99,8 +100,7 @@ else
     }
     async void loadData()
     {
-        var response = await Http.GetFromJsonAsync<List<Publisher>>(urlGrid);
-        ListGrid = response.Where(Data => Data.IsDeleted == false).ToList();
+        ListGrid = await Http.GetFromJsonAsync<List<Publisher>>(urlGrid);
         StateHasChanged();
     }
     // async void loadCategory()
@@ -187,6 +187,7 @@ else
         //         Title = "File download complete"
         //     });
         loadData();
+        StateHasChanged();
     }
 
     async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
@@ -217,6 +218,7 @@ else
                 });
         }
         loadData();
+        StateHasChanged();
     }
 
     async Task OnCreateNew(ToolbarItemClickEventArgs e)

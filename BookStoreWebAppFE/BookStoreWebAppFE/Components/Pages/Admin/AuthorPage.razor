@@ -40,6 +40,7 @@ else
         <Columns>
             <DxGridDataColumn Caption="Id" FieldName="id" />
             <DxGridDataColumn Caption="Name" FieldName="Name" />
+            <DxGridDataColumn Caption="Is Deleted" FieldName="IsDeleted" />
 
         </Columns>
         <ToolbarTemplate>
@@ -99,8 +100,7 @@ else
     }
     async void loadData()
     {
-        var response = await Http.GetFromJsonAsync<List<Author>>(urlGrid);
-        ListGrid = response.Where(Data => Data.IsDeleted == false).ToList();
+        ListGrid = await Http.GetFromJsonAsync<List<Author>>(urlGrid);
         StateHasChanged();
     }
     // async void loadCategory()

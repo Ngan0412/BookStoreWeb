@@ -1,0 +1,108 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\DaiCa\\Project\\Web\\BookStoreWebAppFE\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Admin\\AppData\\Local\\SourceServer\\250d3dfc72970b9cb6d8b3b848086ab095c67fe9d9eeeaf43b13c29ebf64a942\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\BookPage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8804637C-A68D-4A39-91CA-7FCA0EE88F1A}|BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE.csproj|c:\\daica\\project\\web\\bookstorewebappfe\\bookstorewebappfe\\bookstorewebappfe\\components\\pages\\admin\\bookpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8804637C-A68D-4A39-91CA-7FCA0EE88F1A}|BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE.csproj|solutionrelative:bookstorewebappfe\\bookstorewebappfe\\components\\pages\\admin\\bookpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8804637C-A68D-4A39-91CA-7FCA0EE88F1A}|BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE.csproj|c:\\daica\\project\\web\\bookstorewebappfe\\bookstorewebappfe\\bookstorewebappfe\\components\\pages\\admin\\customerpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8804637C-A68D-4A39-91CA-7FCA0EE88F1A}|BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE.csproj|solutionrelative:bookstorewebappfe\\bookstorewebappfe\\components\\pages\\admin\\customerpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8804637C-A68D-4A39-91CA-7FCA0EE88F1A}|BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE.csproj|c:\\daica\\project\\web\\bookstorewebappfe\\bookstorewebappfe\\bookstorewebappfe\\components\\pages\\admin\\orderpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8804637C-A68D-4A39-91CA-7FCA0EE88F1A}|BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE.csproj|solutionrelative:bookstorewebappfe\\bookstorewebappfe\\components\\pages\\admin\\orderpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8804637C-A68D-4A39-91CA-7FCA0EE88F1A}|BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE.csproj|c:\\daica\\project\\web\\bookstorewebappfe\\bookstorewebappfe\\bookstorewebappfe\\components\\pages\\admin\\categorypage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{8804637C-A68D-4A39-91CA-7FCA0EE88F1A}|BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE.csproj|solutionrelative:bookstorewebappfe\\bookstorewebappfe\\components\\pages\\admin\\categorypage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BookPage.razor",
+              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Local\\SourceServer\\250d3dfc72970b9cb6d8b3b848086ab095c67fe9d9eeeaf43b13c29ebf64a942\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\BookPage.razor",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Users\\Admin\\AppData\\Local\\SourceServer\\250d3dfc72970b9cb6d8b3b848086ab095c67fe9d9eeeaf43b13c29ebf64a942\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\BookPage.razor",
+              "ToolTip": "C:\\Users\\Admin\\AppData\\Local\\SourceServer\\250d3dfc72970b9cb6d8b3b848086ab095c67fe9d9eeeaf43b13c29ebf64a942\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\BookPage.razor",
+              "RelativeToolTip": "..\\..\\..\\..\\Users\\Admin\\AppData\\Local\\SourceServer\\250d3dfc72970b9cb6d8b3b848086ab095c67fe9d9eeeaf43b13c29ebf64a942\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\BookPage.razor",
+              "ViewState": "AgIAAB8BAAAAAAAAAAAtwC8BAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-27T10:40:00.353Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CustomerPage.razor",
+              "DocumentMoniker": "C:\\DaiCa\\Project\\Web\\BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\CustomerPage.razor",
+              "RelativeDocumentMoniker": "BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\CustomerPage.razor",
+              "ToolTip": "C:\\DaiCa\\Project\\Web\\BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\CustomerPage.razor",
+              "RelativeToolTip": "BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\CustomerPage.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-27T10:39:51.166Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "OrderPage.razor",
+              "DocumentMoniker": "C:\\DaiCa\\Project\\Web\\BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\OrderPage.razor",
+              "RelativeDocumentMoniker": "BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\OrderPage.razor",
+              "ToolTip": "C:\\DaiCa\\Project\\Web\\BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\OrderPage.razor",
+              "RelativeToolTip": "BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\OrderPage.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-27T10:39:48.149Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CategoryPage.razor",
+              "DocumentMoniker": "C:\\DaiCa\\Project\\Web\\BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\CategoryPage.razor",
+              "RelativeDocumentMoniker": "BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\CategoryPage.razor",
+              "ToolTip": "C:\\DaiCa\\Project\\Web\\BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\CategoryPage.razor",
+              "RelativeToolTip": "BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\CategoryPage.razor",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-27T10:39:40.161Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BookPage.razor",
+              "DocumentMoniker": "C:\\DaiCa\\Project\\Web\\BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\BookPage.razor",
+              "RelativeDocumentMoniker": "BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\BookPage.razor",
+              "ToolTip": "C:\\DaiCa\\Project\\Web\\BookStoreWebAppFE\\BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\BookPage.razor",
+              "RelativeToolTip": "BookStoreWebAppFE\\BookStoreWebAppFE\\Components\\Pages\\Admin\\BookPage.razor",
+              "ViewState": "AgIAAD8BAAAAAAAAAAAiwFMBAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-27T10:38:58.382Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

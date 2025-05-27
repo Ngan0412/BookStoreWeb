@@ -338,7 +338,7 @@ else
             // Sửa
             // e.CopyChangesToDataItem(); Copy từ model vào data item hiển thị
             selectedItem = (Book)e.EditModel;
-            response = await Http.PutAsJsonAsync($"{urlGrid}/{selectedItem.Isbn}", selectedItem);
+            response = await Http.PutAsJsonAsync($"{urlGrid}/{selectedItem.id}", selectedItem);
 
         }
         var result = await response.Content.ReadFromJsonAsync<ApiMessageResponse>();

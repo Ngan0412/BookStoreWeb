@@ -402,14 +402,15 @@ CloseOnOutsideClick="true">
 	}
 	async Task OnSignUpClick()
 	{
-		if (await authenticationService.Register(staffModel))
+		string result = await authenticationService.Register(staffModel);
+		if (result.Contains("Success"))
 		{
 			ToastService.ShowToast(new ToastOptions() // SUCCESS
 				{
 					ProviderName = "Overview",
 					ThemeMode = ToastThemeMode.Saturated,
 					RenderStyle = ToastRenderStyle.Success,
-					Title = $"Registration successful. Please check your email to activate your account.",
+					Title = $"{result}"
 				});
 		}
 		else
@@ -419,7 +420,7 @@ CloseOnOutsideClick="true">
 					ProviderName = "Overview",
 					ThemeMode = ToastThemeMode.Saturated,
 					RenderStyle = ToastRenderStyle.Danger,
-					Title = $"Registration failed. Please check your information."
+					Title = $"{result}"
 				});
 		}
 		

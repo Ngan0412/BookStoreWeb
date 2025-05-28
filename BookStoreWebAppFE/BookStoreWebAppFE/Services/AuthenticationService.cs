@@ -12,7 +12,7 @@ namespace BookStoreWebAppFE.Services
     public interface IAuthenticationService
     {
         Task<bool> Login(string username, string password);
-        Task<bool> Register(Staff staffModel);
+        Task<string> Register(Staff staffModel);
         Task Logout();
     }
 
@@ -77,27 +77,27 @@ namespace BookStoreWebAppFE.Services
             _navigationManager.NavigateTo("");
         }
 
-        public async Task<bool> Register(Staff staffModel)
+        public async Task<string> Register(Staff staffModel)
         {
+            string errorContent = string.Empty;
             try
             {
                 if(staffModel != null)
                 {
                     var response = await _httpClient.PostAsJsonAsync("api/auth/register", staffModel);
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Login failed. Status: {response.StatusCode}, Details: {errorContent}");
+                    errorContent = await response.Content.ReadAsStringAsync();
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        return true;
+                        return "Success";
                     }
-                    return false;
+                    return $"{errorContent}";
                 }
-                    
-                return false;
+
+                return $"{errorContent}";
             }
             catch (Exception e)
             {
-                return false;
+                return $"{errorContent}";
             }
         }
     }

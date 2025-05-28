@@ -5,14 +5,19 @@
 
 <style>
     [b-7ak3fumu6r] .navigation-drawer > .dxbl-drawer-panel {
-    background-image: linear-gradient(180deg, rgba(58, 77, 57) 0%, rgb(58, 77, 57) 100%);
+        background-image: linear-gradient(180deg,rgb(6, 99, 100), rgb(6, 99, 100));
+    }
+
+    .nav-buttons-container{
+        background-image: url(https://newshop.vn/public/uploads/slider-box/ab9bcfb2bd7b6c479286e2fc9e59e8c1.jpg);
+        height:60px;
     }
 
     .nav-buttons-container[b-7ak3fumu6r] {
     padding: 0 !important;
     }
     .header-text-right {
-    color: #739072; /* Dark gray for a more modern and readable text */
+    color: White; /* Dark gray for a more modern and readable text */
     font-size: 24px; /* Slightly larger font size for emphasis */
     font-family: 'Playfair Display', serif; /* Elegant serif font for a stylish look */
     font-weight: 700; /* Bold for emphasis */
@@ -23,11 +28,6 @@
     overflow: hidden; /* Ensures no overflow in case of longer text */
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     transition: color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
-    }
-
-    .header-text-right:hover {
-    color: #333; /* A warm gold color for a more luxurious look */
-    transform: translateY(-3px); /* Slight movement to show interactivity */
     }
 
 
@@ -54,13 +54,21 @@
     }
 
     .dxbl-grid-focused-row{
-    background-color: #4F6F52 !important; /* Màu nền */
+        background-color: rgb(29, 161, 242) !important; /* focus grid */
 
     }
 
     .dxbl-grid-header-row {
-    background-color: #DDEB9D !important; /* Màu nền */
+        background-color: rgb(6, 99, 100) !important; /* header grid */
 
+    } 
+    .dxbl-menu-item:hover {
+            background-color: rgb(58, 213, 216) !important; /* hover nav */
+
+    } 
+
+    .dxbl-grid-header{ /* Màu chu heder */
+        color: white !important;
     }
 
     .HButton {
@@ -73,20 +81,22 @@
     justify-content: center;
     }
     .create {
-    background-color : green !important;
+        background-color: #4CAF50 !important;
     }
     .edit {
-    background-color : yellow !important;
+        background-color: #2196F3 !important;
     }
     .delete {
-    background-color : red !important;
+        background-color: #F44336 !important;
     }
     .chooser-column {
     background-color : gray !important;
     }
 
 </style>
+
 <div class="page">
+    
     @if (new Uri(NavigationManager.Uri).LocalPath.Contains("user"))
     {
         <div class="p-4" style="max-height: 95vh; overflow-y: auto;">
@@ -106,8 +116,15 @@
                     <NavLink href="@UrlGenerator.GetUrl(new Uri(NavigationManager.Uri).LocalPath, !ToggledSidebar)">
                         <DxButton RenderStyle="@ButtonRenderStyle.Secondary" RenderStyleMode="@ButtonRenderStyleMode.Text" CssClass="menu-button" IconCssClass="icon icon-menu"></DxButton>
                     </NavLink>
+                    @if (new Uri(NavigationManager.Uri).LocalPath != "/")
+                    {
+                        <NavLink href="@UrlGenerator.GetUrl("/", ToggledSidebar)" class="button-link hidden">
+                            <DxButton RenderStyle="@ButtonRenderStyle.Dark" Text="Back to Home" RenderStyleMode="@ButtonRenderStyleMode.Text" CssClass="menu-button-nav" IconCssClass="icon icon-back"></DxButton>
+                        </NavLink>
+                    }
                 </div>
                 <div class="p-4">
+                    
                     @Body
                 </div>
             </DrawerTarget>

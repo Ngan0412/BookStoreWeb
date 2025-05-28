@@ -6,14 +6,13 @@
 @rendermode InteractiveServer
 @using BookStoreWebAppFE.Services
 @inject IAuthenticationService authenticationService
-
 <div class="d-flex align-items-center custom-toast-background">
     <DxToastProvider Name="Overview"
     MaxToastCount="5"
     AnimationType="ToastAnimationType.Slide"
     HorizontalAlignment="HorizontalAlignment.Right"
     VerticalAlignment="VerticalEdge.Top"
-    DisplayTime="TimeSpan.Zero"
+    DisplayTime="TimeSpan.FromSeconds(2)"
     Width="320px" />
 </div>
 <PageTitle>Book</PageTitle>
@@ -53,7 +52,7 @@ else
             <DxGridDataColumn Caption="Category">
                 <FilterRowCellTemplate>
                     <DxComboBox Data="@categories"
-                                @bind-Value="filterCategory"
+                    @bind-Value="filterCategory"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                     TextFieldName="@nameof(selectedCategory.Name)"
                     SelectedItemChanged="(Category value)=>SelectedCategoryFilter(value)">
@@ -75,7 +74,7 @@ else
                     @bind-Value="filterAuthor"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                     TextFieldName="@nameof(selectedAuthor.Name)"
-                        SelectedItemChanged="(Author value)=>SelectedAuthorFilter(value)">
+                    SelectedItemChanged="(Author value)=>SelectedAuthorFilter(value)">
                     </DxComboBox>
                 </FilterRowCellTemplate>
                 <CellDisplayTemplate>
@@ -91,10 +90,10 @@ else
             <DxGridDataColumn Caption="Publisher">
                 <FilterRowCellTemplate>
                     <DxComboBox Data="@publishers"
-                                @bind-Value="filterPublisher"
+                    @bind-Value="filterPublisher"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                     TextFieldName="@nameof(selectedPublisher.Name)"
-                        SelectedItemChanged="(Publisher value)=>SelectedPublisherFilter(value)">
+                    SelectedItemChanged="(Publisher value)=>SelectedPublisherFilter(value)">
                     </DxComboBox>
                 </FilterRowCellTemplate>
                 <CellDisplayTemplate>
@@ -107,7 +106,7 @@ else
             </DxGridDataColumn>
 
             <!-- Cột Year of Publication, kiểu smallint -->
-            <DxGridDataColumn Caption="Year of Publication" FieldName="YearOfPublication" Width="80"/>
+            <DxGridDataColumn Caption="Year of Publication" FieldName="YearOfPublication" Width="80" DisplayFormat="########" />
 
             <!-- Cột Price, kiểu decimal -->
             <DxGridDataColumn Caption="Price" FieldName="Price" Width="80"/>
@@ -115,14 +114,14 @@ else
             <!-- Cột Image, kiểu varchar -->
             <!-- Cột Quantity, kiểu int -->
             <DxGridDataColumn Caption="Quantity" FieldName="Quantity" Width="80" DisplayFormat="N0" />
-            <DxGridDataColumn Caption="Is Delete" FieldName="isDeleted" Width="80" />
+            <DxGridDataColumn Caption="Is Deleted" FieldName="isDeleted" Width="80" />
             <DxGridDataColumn Caption="Image" >
                 <CellDisplayTemplate>
                     @{
                         var data = (Book)context.DataItem;
 
                     }
-                    <img src="@data.Image" style="width: 100px; height:100px;"/>
+                    <img src="@data.Image" style="width: 70px; height:70px;"/>
                 </CellDisplayTemplate>
             </DxGridDataColumn>
         </Columns>
@@ -157,7 +156,7 @@ else
                     <!-- ISBN -->
                     <div class="col-lg-6 col-sm-12">
                         <DxFormLayoutItem Caption="ISBN:" CssClass="custom-item">
-                            <DxTextBox @bind-Text="@selectedItem.Isbn" Enabled="@enableEdit" CssClass="form-control-solid control" />
+                            <DxTextBox @bind-Text="@selectedItem.Isbn" Enabled="false" CssClass="form-control-solid control" />
                             <ValidationMessage For="@(() => selectedItem.Isbn)" />
                         </DxFormLayoutItem>
                     </div>
@@ -282,7 +281,7 @@ else
     {
         var result = await Http.GetFromJsonAsync<List<Book>>(urlGrid);
         ListBook = result.ToList();
-		ListGrid = ListBook.ToList();
+        ListGrid = ListBook.ToList();
         StateHasChanged();
     }
     async void loadCategory()
@@ -312,6 +311,8 @@ else
             title = "Create form";
             enableEdit = true;
             selectedCategory = new();
+            var random = new Random();
+            selectedItem.Isbn = string.Join("", Enumerable.Range(0, 13).Select(_ => random.Next(0, 10)));
         }
         else
         {
@@ -339,7 +340,7 @@ else
             // e.CopyChangesToDataItem(); Copy từ model vào data item hiển thị
             selectedItem = (Book)e.EditModel;
             response = await Http.PutAsJsonAsync($"{urlGrid}/{selectedItem.id}", selectedItem);
-
+            var errorContent = await response.Content.ReadAsStringAsync();
         }
         var result = await response.Content.ReadFromJsonAsync<ApiMessageResponse>();
         if (response.IsSuccessStatusCode)
@@ -385,6 +386,8 @@ else
         //         Title = "File download complete"
         //     }); 
         loadData();
+        StateHasChanged();
+
     }
 
     async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
@@ -415,6 +418,8 @@ else
                 });
         }
         loadData();
+        StateHasChanged();
+
     }
 
     async Task OnCreateNew(ToolbarItemClickEventArgs e)

@@ -11,7 +11,7 @@
     AnimationType="ToastAnimationType.Slide"
     HorizontalAlignment="HorizontalAlignment.Right"
     VerticalAlignment="VerticalEdge.Top"
-    DisplayTime="TimeSpan.Zero"
+    DisplayTime="TimeSpan.FromSeconds(2)"
     Width="320px" />
 </div>
 <PageTitle>Order</PageTitle>
@@ -139,13 +139,13 @@ else
         </ToolbarTemplate>
         <EditFormTemplate Context="editFormContext">
             <DxFormLayout CssClass="my-form-layout">
-                <div class="row">                                      
+                <div class="row" style="width: 100%;">                                      
                     @if (!IsEdit)
                     {
                         <!-- Customer -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Customer:" CssClass="custom-item">
-                                <DxComboBox Data="@customers"
+                                <DxComboBox Data="@customersCreate"
                                 SearchFilterCondition="ListSearchFilterCondition.Contains"
                                 @bind-Value="@selectedItem.CustomerId"
                                 TextFieldName="@nameof(selectedCustomer.givenName)"
@@ -156,7 +156,7 @@ else
                         <!-- Promotion -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Promotion:" CssClass="custom-item">
-                                <DxComboBox Data="@promotions"
+                                <DxComboBox Data="@promotionsCreate"
                                 SearchFilterCondition="ListSearchFilterCondition.Contains"
                                 @bind-Value="@selectedItem.PromotionId"
                                 TextFieldName="@nameof(selectedPromotion.name)"
@@ -175,7 +175,8 @@ else
                                     SearchFilterCondition="ListSearchFilterCondition.Contains"
                                     @bind-Value="@item.BookId"
                                     TextFieldName="@nameof(selectedBook.Title)"
-                                    ValueFieldName="@nameof(selectedBook.id)" />
+                                    ValueFieldName="@nameof(selectedBook.id)"
+                                    SelectedItemChanged="(Book data)=> OnChangeBook(item, data)" />
                                 </DxFormLayoutItem>
                             </div>
                             <div class="col-4">
@@ -188,11 +189,12 @@ else
                                     <DxSpinEdit @bind-Value="@item.Price" Mask="###,###,###,###,##0"
                                     DisplayFormat="{0:n0}"
                                     MaxValue="999999999999999"
-                                    MinValue="10000" />
+                                    MinValue="10000" 
+                                    Enabled="false"/>
                                 </DxFormLayoutItem>
                             </div>
                         }
-                        <div class="col-12" style="margin-left:12px;">
+                        <div class="col-12" style="margin: 12px 20px 0 0;">
                             <DxButton Click="@AddOrderItem"
                             Text="Add Item"
                             IconCssClass="fa-solid fa-plus icon-bt"
@@ -202,19 +204,20 @@ else
                     }
                     else
                     {
+                        <!-- Note -->
+                        <div class="col-8">
+                            <DxFormLayoutItem Caption="Note:" CssClass="custom-item">
+                                <DxMemo @bind-Text="@selectedItem.Note" Rows="3" />
+                            </DxFormLayoutItem>
+                        </div>
                         <!-- Status -->
-                        <div class="col-lg-6 col-sm-12">
+                        <div class="col-4">
                             <DxFormLayoutItem Caption="Status:" CssClass="custom-item">
                                 <DxCheckBox @bind-Checked="@selectedItem.Status" />
                             </DxFormLayoutItem>
                         </div>
 
-                        <!-- Note -->
-                        <div class="col-12">
-                            <DxFormLayoutItem Caption="Note:" CssClass="custom-item">
-                                <DxMemo @bind-Text="@selectedItem.Note" Rows="3" />
-                            </DxFormLayoutItem>
-                        </div>
+                       
                     }
                 </div>
 
@@ -241,12 +244,15 @@ else
     Staff? selectedStaff { get; set; } = new();
     Staff? filterStaff { get; set; }
     List<Customer>? customers { get; set; } = new();
+    List<Customer>? customersCreate { get; set; } = new();
     Customer? selectedCustomer { get; set; } = new();
     Customer? filterCustomer { get; set; }
     List<Promotion>? promotions { get; set; } = new();
+    List<Promotion>? promotionsCreate { get; set; } = new();
     Promotion? selectedPromotion { get; set; } = new();
     Promotion? filterPromotion { get; set; }
     List<Book>? books { get; set; } = new();
+    List<Book>? booksCreate { get; set; } = new();
     Book selectedBook { get; set; } = new();
     IGrid MyGrid { get; set; }
     protected override async Task OnInitializedAsync()
@@ -268,6 +274,7 @@ else
     async void loadCustomer()
     {
         customers = await Http.GetFromJsonAsync<List<Customer>>(urlCustomer);
+        customersCreate = customers.Where(data => data.IsDeleted == false).ToList();
         StateHasChanged();
     }
     async void loadBook()
@@ -284,6 +291,7 @@ else
     async void loadPromotion()
     {
         promotions = await Http.GetFromJsonAsync<List<Promotion>>(urlPromotion);
+        promotionsCreate = promotions.Where(data => data.IsDeleted == false).ToList();
         StateHasChanged();
     }
 
@@ -503,8 +511,12 @@ else
         }
         StateHasChanged();
     }
-	void AddOrderItem()
-	{
-		ListOrderItem.Add(new OrderItem());
-	}
+    void AddOrderItem()
+    {
+        ListOrderItem.Add(new OrderItem());
+    }
+    void OnChangeBook(OrderItem item, Book data)
+    {
+        item.Price = data.Price;
+    }
 }

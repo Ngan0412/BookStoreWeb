@@ -34,8 +34,6 @@ namespace BookStoreWebAppFE.Models
 
         public decimal Price { get; set; }
         [Required(ErrorMessage =  "Không Được Để Trống !")]
-
-
         public bool isDeleted { get; set; }
 
     }

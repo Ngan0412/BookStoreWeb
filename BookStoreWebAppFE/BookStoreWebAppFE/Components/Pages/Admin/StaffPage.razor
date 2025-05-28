@@ -11,7 +11,7 @@
     AnimationType="ToastAnimationType.Slide"
     HorizontalAlignment="HorizontalAlignment.Right"
     VerticalAlignment="VerticalEdge.Top"
-    DisplayTime="TimeSpan.Zero"
+                     DisplayTime="TimeSpan.FromSeconds(2)"
     Width="320px" />
 </div>
 <PageTitle>Staff</PageTitle>
@@ -194,8 +194,7 @@ else
     }
     async void loadData()
     {
-        var response = await Http.GetFromJsonAsync<List<Staff>>(urlGrid);
-        ListGrid = response.Where(Data => Data.IsDeleted == false).ToList();
+        ListGrid = await Http.GetFromJsonAsync<List<Staff>>(urlGrid);
         StateHasChanged();
     }
     // async void loadCategory()

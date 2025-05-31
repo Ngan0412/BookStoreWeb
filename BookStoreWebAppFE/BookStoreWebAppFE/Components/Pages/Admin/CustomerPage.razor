@@ -122,6 +122,11 @@ else
                                         ValueFieldName="Value" />
                         </DxFormLayoutItem>
                     </div>
+                    <div class="col-lg-12 col-sm-12">
+                        <DxFormLayoutItem Caption="Is Deleted:" CssClass="custom-item">
+                            <DxCheckBox @bind-Checked="@selectedItem.IsDeleted" />
+                        </DxFormLayoutItem>
+                    </div>
                 </div>
             </DxFormLayout>
         </EditFormTemplate>

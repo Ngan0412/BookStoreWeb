@@ -105,7 +105,7 @@ else
 
             <DxGridDataColumn Caption="Status" FieldName="Status">
                 <CellDisplayTemplate>
-                    @((bool)context.Value ? "Completed" : "Pending")
+                    @((bool)context.Value ? "Completed" : "Issue")
                 </CellDisplayTemplate>
             </DxGridDataColumn>
 
@@ -140,8 +140,6 @@ else
         <EditFormTemplate Context="editFormContext">
             <DxFormLayout CssClass="my-form-layout">
                 <div class="row" style="width: 100%;">                                      
-                    @if (!IsEdit)
-                    {
                         <!-- Customer -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Customer:" CssClass="custom-item">
@@ -149,7 +147,7 @@ else
                                 SearchFilterCondition="ListSearchFilterCondition.Contains"
                                 @bind-Value="@selectedItem.CustomerId"
                                 TextFieldName="@nameof(selectedCustomer.givenName)"
-                                ValueFieldName="@nameof(selectedCustomer.id)" />
+                                ValueFieldName="@nameof(selectedCustomer.id)" Enabled="!IsEdit"/>
                             </DxFormLayoutItem>
                         </div>
 
@@ -160,13 +158,43 @@ else
                                 SearchFilterCondition="ListSearchFilterCondition.Contains"
                                 @bind-Value="@selectedItem.PromotionId"
                                 TextFieldName="@nameof(selectedPromotion.name)"
-                                ValueFieldName="@nameof(selectedPromotion.id)" />
+                                ValueFieldName="@nameof(selectedPromotion.id)"
+                                        SelectedItemChanged="(Promotion data)=> OnChangePromotion(data)" Enabled="!IsEdit" />
                             </DxFormLayoutItem>
                         </div>
-                        <div class="col-lg-12 col-sm-12" style="margin-left:12px;">
-                            Order Item
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Condition:" CssClass="custom-item">
+                                <DxSpinEdit @bind-Value="@selectedPromotion.condition" Mask="###,###,###,###,##0"
+                                DisplayFormat="{0:n0}"
+                                Enabled="false" ShowSpinButtons="false" />
+                            </DxFormLayoutItem>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Discount percent(%):" CssClass="custom-item">
+                                @{
+                                    string abc = $"{(@selectedPromotion.discountPercent * 100).ToString()}%";
+                                }
+                                <DxTextBox @bind-Text="@abc" Enabled="false"  />
+                            </DxFormLayoutItem>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Remaining quantity:" CssClass="custom-item">
+                                <DxSpinEdit @bind-Value="@selectedPromotion.quantity"
+                                Enabled="false"
+                                ShowSpinButtons="false" />
+                            </DxFormLayoutItem>
                         </div>
 
+                        <div class="col-lg-6 col-sm-12" style="margin-left:12px;">
+                        <h4> Order Item:</h4>
+                        </div>
+                        <div class="col-lg-12 col-sm-12">
+                            <DxFormLayoutItem Caption="Sum:" CssClass="custom-item">
+                                <DxSpinEdit @bind-Value="@sum" Mask="###,###,###,###,##0"
+                                Enabled="false"
+                                ShowSpinButtons="false" />
+                            </DxFormLayoutItem>
+                        </div>
                         @foreach (var item in ListOrderItem)
                         {
                             <div class="col-4" >
@@ -176,12 +204,15 @@ else
                                     @bind-Value="@item.BookId"
                                     TextFieldName="@nameof(selectedBook.Title)"
                                     ValueFieldName="@nameof(selectedBook.id)"
-                                    SelectedItemChanged="(Book data)=> OnChangeBook(item, data)" />
+                                            SelectedItemChanged="(Book data)=> OnChangeBook(item, data)" Enabled="!IsEdit" />
                                 </DxFormLayoutItem>
                             </div>
                             <div class="col-4">
                                 <DxFormLayoutItem Caption="Quantity:" CssClass="custom-item">
-                                    <DxSpinEdit @bind-Value="@item.Quantity" MinValue="1" />
+                                    <DxSpinEdit Value="@item.Quantity"
+                                    ValueChanged="@((int newValue) => OnQuantityChanged(newValue, item))"
+                                    ValueExpression="@(() => item.Quantity)"
+                                            MinValue="1" Enabled="!IsEdit" />
                                 </DxFormLayoutItem>
                             </div>
                             <div class="col-4">
@@ -196,13 +227,12 @@ else
                         }
                         <div class="col-12" style="margin: 12px 20px 0 0;">
                             <DxButton Click="@AddOrderItem"
-                            Text="Add Item"
+                                  Text="Add Item" Enabled="!IsEdit"
                             IconCssClass="fa-solid fa-plus icon-bt"
                             CssClass="displayStyle btn-success" />
 
                         </div>
-                    }
-                    else
+                    @if(IsEdit)
                     {
                         <!-- Note -->
                         <div class="col-8">
@@ -211,13 +241,17 @@ else
                             </DxFormLayoutItem>
                         </div>
                         <!-- Status -->
-                        <div class="col-4">
+                        <div class="col-2">
                             <DxFormLayoutItem Caption="Status:" CssClass="custom-item">
                                 <DxCheckBox @bind-Checked="@selectedItem.Status" />
                             </DxFormLayoutItem>
                         </div>
+                        <div class="col-lg-2">
+                            <DxFormLayoutItem Caption="Is Deleted:" CssClass="custom-item">
+                                <DxCheckBox @bind-Checked="@selectedItem.IsDeleted" />
+                            </DxFormLayoutItem>
+                        </div>
 
-                       
                     }
                 </div>
 
@@ -254,6 +288,7 @@ else
     List<Book>? books { get; set; } = new();
     List<Book>? booksCreate { get; set; } = new();
     Book selectedBook { get; set; } = new();
+    decimal sum { get; set; } = 0;
     IGrid MyGrid { get; set; }
     protected override async Task OnInitializedAsync()
     {
@@ -518,5 +553,37 @@ else
     void OnChangeBook(OrderItem item, Book data)
     {
         item.Price = data.Price;
+        OnChangeSum();
+    }
+    void OnChangePromotion(Promotion data)
+    {
+        selectedPromotion = data;
+        OnChangeSum();
+        StateHasChanged();
+    }
+    void OnChangeSum()
+    {
+        decimal total = 0;
+        foreach(var data in ListOrderItem)
+        {
+            total += data.Price              * data.Quantity;
+        }
+        if (selectedPromotion != null)
+        {
+            if (total >= selectedPromotion.condition && selectedPromotion.quantity > 0)
+            {
+                sum = total * (1-(decimal)selectedPromotion.discountPercent);
+            }
+            else sum = total;
+        }
+        StateHasChanged();
+    }
+    void OnQuantityChanged(int newValue, OrderItem item)
+    {
+        if(item != null)
+        {
+            item.Quantity = newValue;
+        }
+        OnChangeSum(); // Gọi hàm tính tổng
     }
 }

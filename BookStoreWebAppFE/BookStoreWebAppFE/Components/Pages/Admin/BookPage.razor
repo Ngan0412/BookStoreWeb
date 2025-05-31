@@ -156,7 +156,7 @@ else
                     <!-- ISBN -->
                     <div class="col-lg-6 col-sm-12">
                         <DxFormLayoutItem Caption="ISBN:" CssClass="custom-item">
-                            <DxTextBox @bind-Text="@selectedItem.Isbn" Enabled="false" CssClass="form-control-solid control" />
+                            <DxTextBox @bind-Text="@selectedItem.Isbn" CssClass="form-control-solid control" />
                             <ValidationMessage For="@(() => selectedItem.Isbn)" />
                         </DxFormLayoutItem>
                     </div>
@@ -311,8 +311,6 @@ else
             title = "Create form";
             enableEdit = true;
             selectedCategory = new();
-            var random = new Random();
-            selectedItem.Isbn = string.Join("", Enumerable.Range(0, 13).Select(_ => random.Next(0, 10)));
         }
         else
         {

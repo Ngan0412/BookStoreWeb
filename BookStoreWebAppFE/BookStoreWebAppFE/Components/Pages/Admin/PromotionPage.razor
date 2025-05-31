@@ -113,6 +113,11 @@ else
                             <DxSpinEdit @bind-Value="@selectedItem.quantity" MinValue="0" />
                         </DxFormLayoutItem>
                     </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <DxFormLayoutItem Caption="Is Deleted:" CssClass="custom-item">
+                            <DxCheckBox @bind-Checked="@selectedItem.IsDeleted" />
+                        </DxFormLayoutItem>
+                    </div>
                 </div>
 
             </DxFormLayout>

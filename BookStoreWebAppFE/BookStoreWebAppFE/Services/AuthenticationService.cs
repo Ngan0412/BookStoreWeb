@@ -50,6 +50,7 @@ namespace BookStoreWebAppFE.Services
                 }
             ;
                 var response = await _httpClient.PostAsJsonAsync("api/auth/login", login);
+                var errorContent = await response.Content.ReadAsStringAsync();
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {

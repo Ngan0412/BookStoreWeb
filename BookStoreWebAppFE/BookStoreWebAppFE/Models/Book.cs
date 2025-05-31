@@ -7,7 +7,7 @@ namespace BookStoreWebAppFE.Models
     {
         public Guid id { get; set; }
         [Required(ErrorMessage = "Không Được Để Trống!")]
-        [StringLength(13, MinimumLength = 10, ErrorMessage = "Phải nhập từ 10 đến 13 ký tự!")]
+        [StringLength(13, MinimumLength = 13, ErrorMessage = "Phải nhập 13 ký tự!")]
         public string Isbn { get; set; } = null!;
         [Required(ErrorMessage =  "Không Được Để Trống !")]
         [StringLength(200)]

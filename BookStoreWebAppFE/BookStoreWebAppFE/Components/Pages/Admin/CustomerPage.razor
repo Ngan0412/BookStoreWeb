@@ -39,8 +39,7 @@ else
             @ref=MyGrid>
         <Columns>
             <DxGridDataColumn Caption="Id" FieldName="id" />
-            <DxGridDataColumn Caption="Family Name" FieldName="familyName" />
-            <DxGridDataColumn Caption="Given Name" FieldName="givenName" />
+            <DxGridDataColumn Caption="Full Name" FieldName="FullName" />
             <DxGridDataColumn Caption="Phone" FieldName="phone" />
             <DxGridDataColumn Caption="Address" FieldName="address" />
             <DxGridDataColumn Caption="Gender"  >
@@ -64,7 +63,7 @@ else
                                    CssClass="me-2 create HButton"
                                    Click="OnCreateNew" />
 
-                    <DxToolbarItem Text="Edit"
+                    <DxToolbarItem Text="View"
                                    IconCssClass="oi oi-pencil"
                                    CssClass="me-2 edit HButton"
                                    Click="OnEdit" />
@@ -173,7 +172,7 @@ else
         }
         else
         {
-            title = "Edit form";
+            title = "View form";
             enableEdit = false;
         }
         StateHasChanged();

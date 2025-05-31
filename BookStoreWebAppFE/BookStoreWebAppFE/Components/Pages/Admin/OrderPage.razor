@@ -44,7 +44,7 @@ else
                     <DxComboBox Data="@staffs"
                     @bind-Value="filterStaff"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                    TextFieldName="@nameof(selectedStaff.GivenName)"
+                                TextFieldName="@nameof(selectedStaff.FullName)"
                     SelectedItemChanged="(Staff value) => SelectedStaffFilter(value)">
                     </DxComboBox>
                 </FilterRowCellTemplate>
@@ -52,7 +52,7 @@ else
                     @{
                         var data = (Order)context.DataItem;
                         var staff = staffs?.FirstOrDefault(s => s.id == data.StaffId) ;
-                        string staffName =( staff  != null) ? staff.GivenName : string.Empty;
+                        string staffName = (staff != null) ? staff.FullName : string.Empty;
                     }
                     <span>@staffName</span>
                 </CellDisplayTemplate>
@@ -64,7 +64,7 @@ else
                     <DxComboBox Data="@customers"
                     @bind-Value="filterCustomer"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                    TextFieldName="@nameof(selectedCustomer.givenName)"
+                                TextFieldName="@nameof(selectedCustomer.FullName)"
                     SelectedItemChanged="(Customer value) => SelectedCustomerFilter(value)">
                     </DxComboBox>
                 </FilterRowCellTemplate>
@@ -72,7 +72,7 @@ else
                     @{
                         var data = (Order)context.DataItem;
                         var customer = customers?.FirstOrDefault(s => s.id == data.CustomerId);
-                        string customerName = (customer != null) ?  customer.givenName : string.Empty;
+                        string customerName = (customer != null) ? customer.FullName : string.Empty;
                     }
                     <span>@customerName</span>
                 </CellDisplayTemplate>
@@ -120,7 +120,7 @@ else
                 CssClass="me-2 create HButton"
                 Click="OnCreateNew" />
 
-                <DxToolbarItem Text="Edit"
+                <DxToolbarItem Text="View"
                 IconCssClass="oi oi-pencil"
                 CssClass="me-2 edit HButton"
                 Click="OnEdit" />
@@ -146,11 +146,21 @@ else
                                 <DxComboBox Data="@customersCreate"
                                 SearchFilterCondition="ListSearchFilterCondition.Contains"
                                 @bind-Value="@selectedItem.CustomerId"
-                                TextFieldName="@nameof(selectedCustomer.givenName)"
+                                TextFieldName="@nameof(selectedCustomer.FullName)"
+                                SelectedItemChanged="(Customer data)=> OnChangeCustomer(data)"
                                 ValueFieldName="@nameof(selectedCustomer.id)" Enabled="!IsEdit"/>
                             </DxFormLayoutItem>
                         </div>
-
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="SĐT:" CssClass="custom-item">
+                                <DxTextBox @bind-Text="@selectedCustomer.phone" Enabled="false" />
+                            </DxFormLayoutItem>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Day of bitrh:" CssClass="custom-item">
+                                <DxDateEdit @bind-Date="@selectedCustomer.dateOfBirth" Enabled="false" />
+                            </DxFormLayoutItem>
+                        </div>
                         <!-- Promotion -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Promotion:" CssClass="custom-item">
@@ -348,7 +358,7 @@ else
             selectedCustomer = customers?.FirstOrDefault(c => c.id == selectedItem.CustomerId);
             selectedPromotion = promotions?.FirstOrDefault(c => c.id == selectedItem.PromotionId);
             ListOrderItem = await Http.GetFromJsonAsync<List<OrderItem>>($"{urlGrid}/items/{selectedItem.id}");
-            title = "Edit form";
+            title = "View form";
             IsEdit = true;
         }
         StateHasChanged();
@@ -559,6 +569,11 @@ else
     {
         selectedPromotion = data;
         OnChangeSum();
+        StateHasChanged();
+    }
+    void OnChangeCustomer(Customer data)
+    {
+        selectedCustomer = data;
         StateHasChanged();
     }
     void OnChangeSum()

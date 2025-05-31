@@ -12,6 +12,7 @@ namespace BookStoreWebAppFE.Models
         public string FamilyName { get; set; }
         [Required]
         public string GivenName { get; set; }
+        public string FullName { get { return $"{FamilyName} {GivenName}";} }
         public DateOnly DateOfBirth { get; set; }
         [Required]
         public string Address { get; set; }

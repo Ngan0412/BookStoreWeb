@@ -133,7 +133,7 @@ else
                 CssClass="me-2 create HButton"
                 Click="OnCreateNew"/>
 
-                <DxToolbarItem Text="Edit"
+                <DxToolbarItem Text="View"
                 IconCssClass="oi oi-pencil"
                 CssClass="me-2 edit HButton"
                 Click="OnEdit" />
@@ -317,7 +317,7 @@ else
             selectedCategory = categories?.FirstOrDefault(c => c.id == selectedItem.categoryId);    
             selectedAuthor = authors?.FirstOrDefault(c => c.id == selectedItem.authorId);    
             selectedPublisher = publishers?.FirstOrDefault(c => c.id == selectedItem.publisherId);    
-            title = "Edit form";
+            title = "View form";
             enableEdit = false;
         }
         StateHasChanged();

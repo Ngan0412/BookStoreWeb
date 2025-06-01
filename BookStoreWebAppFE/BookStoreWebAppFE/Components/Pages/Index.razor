@@ -443,6 +443,9 @@ CloseOnOutsideClick="true">
 				RenderStyle = ToastRenderStyle.Success,
 				Title = $"{result}" // VD: "Registration successful. Please check your email to activate your account."
 			});
+
+			await Task.Delay(1000); // Cho người dùng thấy Toast 1 giây
+			navigationManager.NavigateTo("/", forceLoad: true);
 		}
 		else
 		{

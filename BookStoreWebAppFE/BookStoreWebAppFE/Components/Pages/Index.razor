@@ -397,23 +397,24 @@ CloseOnOutsideClick="true">
 	{
 		try
 		{
-			var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
-			var result = await response.Content.ReadFromJsonAsync<ApiMessageResponse>();
+			var loginSuccess = await authenticationService.Login(loginModel.Email, loginModel.Password);
 
-			if (response.IsSuccessStatusCode)
+			if (loginSuccess)
 			{
-				// Nếu login thành công, gọi tiếp hàm xác thực & chuyển trang
-				// await authenticationService.SaveTokenFromLoginResponse(result!.Message);
 				navigationManager.NavigateTo("admin/book", forceLoad: true);
 			}
 			else
 			{
+				// Nếu thất bại, gọi lại API login để đọc message lỗi
+				var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+				var errorMessage = await response.Content.ReadAsStringAsync();
+
 				ToastService.ShowToast(new ToastOptions()
 				{
 					ProviderName = "Overview",
 					ThemeMode = ToastThemeMode.Saturated,
 					RenderStyle = ToastRenderStyle.Danger,
-					Title = $"{result?.Message ?? "Please check your email & password to login."}"
+					Title = errorMessage ?? "Login failed. Please check your credentials."
 				});
 			}
 		}
@@ -478,6 +479,7 @@ CloseOnOutsideClick="true">
 	// 	}
 	// 	StateHasChanged();
 	// }
+
 	// async Task OnSignUpClick()
 	// {
 	// 	string result = await authenticationService.Register(staffModel);

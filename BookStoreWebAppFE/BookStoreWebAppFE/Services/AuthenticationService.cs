@@ -80,27 +80,52 @@ namespace BookStoreWebAppFE.Services
 
         public async Task<string> Register(Staff staffModel)
         {
-            string errorContent = string.Empty;
             try
             {
-                if(staffModel != null)
+                if (staffModel != null)
                 {
                     var response = await _httpClient.PostAsJsonAsync("api/auth/register", staffModel);
-                    errorContent = await response.Content.ReadAsStringAsync();
+                    var message = await response.Content.ReadAsStringAsync();
+
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        return "Success";
+                        return message;
                     }
-                    return $"{errorContent}";
+
+                    return $"Error: {message}";
                 }
 
-                return $"{errorContent}";
+                return "Error: Missing staff data.";
             }
             catch (Exception e)
             {
-                return $"{errorContent}";
+                return $"Error: {e.Message}";
             }
         }
+
+        //public async Task<string> Register(Staff staffModel)
+        //{
+        //    string errorContent = string.Empty;
+        //    try
+        //    {
+        //        if(staffModel != null)
+        //        {
+        //            var response = await _httpClient.PostAsJsonAsync("api/auth/register", staffModel);
+        //            errorContent = await response.Content.ReadAsStringAsync();
+        //            if (response.StatusCode == HttpStatusCode.OK)
+        //            {
+        //                return "Success";
+        //            }
+        //            return $"{errorContent}";
+        //        }
+
+        //        return $"{errorContent}";
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return $"{errorContent}";
+        //    }
+        //}
     }
     public class LoginModel
     {

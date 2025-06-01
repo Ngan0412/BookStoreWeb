@@ -432,43 +432,32 @@ CloseOnOutsideClick="true">
 
 	async Task OnSignUpClick()
 	{
-		try
-		{
-			var response = await Http.PostAsJsonAsync("api/auth/register", staffModel);
-			var result = await response.Content.ReadFromJsonAsync<ApiMessageResponse>();
+		string result = await authenticationService.Register(staffModel);
 
-			if (response.IsSuccessStatusCode)
+		if (!result.StartsWith("Error"))
+		{
+			ToastService.ShowToast(new ToastOptions()
 			{
-				ToastService.ShowToast(new ToastOptions()
-				{
-					ProviderName = "Overview",
-					ThemeMode = ToastThemeMode.Saturated,
-					RenderStyle = ToastRenderStyle.Success,
-					Title = $"{result?.Message ?? "Registration successful!"}"
-				});
-			}
-			else
-			{
-				ToastService.ShowToast(new ToastOptions()
-				{
-					ProviderName = "Overview",
-					ThemeMode = ToastThemeMode.Saturated,
-					RenderStyle = ToastRenderStyle.Danger,
-					Title = $"{result?.Message ?? "Registration failed! Please check all information to register."}"
-				});
-			}
+				ProviderName = "Overview",
+				ThemeMode = ToastThemeMode.Saturated,
+				RenderStyle = ToastRenderStyle.Success,
+				Title = $"{result}" // VD: "Registration successful. Please check your email to activate your account."
+			});
 		}
-		catch (Exception ex)
+		else
 		{
 			ToastService.ShowToast(new ToastOptions()
 			{
 				ProviderName = "Overview",
 				ThemeMode = ToastThemeMode.Saturated,
 				RenderStyle = ToastRenderStyle.Danger,
-				Title = $"System error: {ex.Message}"
+				Title = $"{result.Replace("Error: ", "")}" // Gọn gàng hơn
 			});
 		}
+
+		StateHasChanged();
 	}
+
 
 	// async Task OnSignInClick()
 	// {
@@ -483,9 +472,9 @@ CloseOnOutsideClick="true">
 	// async Task OnSignUpClick()
 	// {
 	// 	string result = await authenticationService.Register(staffModel);
-	// 	if (result.Contains("Regster"))
+	// 	if (result.Contains("Register"))
 	// 	{
-	// 		ToastService.ShowToast(new ToastOptions() SUCCESS
+	// 		ToastService.ShowToast(new ToastOptions()
 	// 			{
 	// 				ProviderName = "Overview",
 	// 				ThemeMode = ToastThemeMode.Saturated,
@@ -495,7 +484,7 @@ CloseOnOutsideClick="true">
 	// 	}
 	// 	else
 	// 	{
-	// 		ToastService.ShowToast(new ToastOptions() ERROR
+	// 		ToastService.ShowToast(new ToastOptions()
 	// 			{
 	// 				ProviderName = "Overview",
 	// 				ThemeMode = ToastThemeMode.Saturated,
@@ -506,6 +495,7 @@ CloseOnOutsideClick="true">
 		
 	// 	StateHasChanged();
 	// }
+
 	async void ShowResetPopup()
 	{
 		isResetPopupVisible = true;

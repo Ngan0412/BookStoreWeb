@@ -41,18 +41,33 @@ else
             <!-- Staff -->
             <DxGridDataColumn Caption="Staff">
                 <FilterRowCellTemplate>
-                    <DxComboBox Data="@staffs"
-                    @bind-Value="filterStaff"
-                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                TextFieldName="@nameof(selectedStaff.FullName)"
-                    SelectedItemChanged="(Staff value) => SelectedStaffFilter(value)">
-                    </DxComboBox>
+                    @if (staffs != null && staffs.Count > 0)
+                    {
+                        <DxComboBox Data="@staffs"
+                                    @bind-Value="filterStaff"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                    TextFieldName="@nameof(selectedStaff.FullName)"
+                                    SelectedItemChanged="(Staff value) => SelectedStaffFilter(value)">
+                        </DxComboBox>
+                    }
+                    else
+                    {
+                        <span>-</span> <!-- Không cho filter nếu không có danh sách -->
+                    }
                 </FilterRowCellTemplate>
+
                 <CellDisplayTemplate>
                     @{
                         var data = (Order)context.DataItem;
-                        var staff = staffs?.FirstOrDefault(s => s.id == data.StaffId) ;
-                        string staffName = (staff != null) ? staff.FullName : string.Empty;
+
+                        // Nếu danh sách staff có, dùng lookup
+                        string staffName = staffs?.FirstOrDefault(s => s.id == data.StaffId)?.FullName;
+
+                        // Nếu không tìm được hoặc danh sách staff null → dùng trực tiếp từ DTO
+                        if (string.IsNullOrWhiteSpace(staffName))
+                        {
+                            staffName = data.StaffName;
+                        }
                     }
                     <span>@staffName</span>
                 </CellDisplayTemplate>
@@ -309,13 +324,38 @@ else
         loadData();
         StateHasChanged();
     }
+
+    // add code moi cua Phuc
     async void loadData()
     {
-        var result = await Http.GetFromJsonAsync<List<Order>>(urlGrid);
-        ListOrder = result.ToList();
-        ListGrid = result.ToList();
+        try
+        {
+            var result = await Http.GetFromJsonAsync<List<Order>>(urlGrid);
+            ListOrder = result.ToList();
+            ListGrid = result.ToList();
+        }
+        catch (HttpRequestException ex)
+        {
+            ToastService.ShowToast(new ToastOptions
+            {
+                ProviderName = "Overview",
+                ThemeMode = ToastThemeMode.Saturated,
+                RenderStyle = ToastRenderStyle.Danger,
+                Title = $"Không thể tải đơn hàng: {ex.Message}"
+            });
+            ListGrid = new List<Order>(); // tránh DxGrid nhận null
+        }
         StateHasChanged();
     }
+
+    // cmt code loi cua Ngan
+    // async void loadData()
+    // {
+    //     var result = await Http.GetFromJsonAsync<List<Order>>(urlGrid);
+    //     ListOrder = result.ToList();
+    //     ListGrid = result.ToList();
+    //     StateHasChanged();
+    // }
     async void loadCustomer()
     {
         customers = await Http.GetFromJsonAsync<List<Customer>>(urlCustomer);
@@ -328,11 +368,26 @@ else
         books = response.Where(data => data.isDeleted == false).ToList();
         StateHasChanged();
     }
+
     async void loadStaff()
+{
+    try
     {
         staffs = await Http.GetFromJsonAsync<List<Staff>>(urlStaff);
-        StateHasChanged();
     }
+    catch (HttpRequestException ex)
+    {
+        staffs = new List<Staff>(); // fallback để không null
+    }
+}
+
+
+    // cmt loi code Ngan
+    // async void loadStaff()
+    // {
+    //     staffs = await Http.GetFromJsonAsync<List<Staff>>(urlStaff);
+    //     StateHasChanged();
+    // }
     async void loadPromotion()
     {
         promotions = await Http.GetFromJsonAsync<List<Promotion>>(urlPromotion);

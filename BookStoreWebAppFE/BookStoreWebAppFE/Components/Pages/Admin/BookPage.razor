@@ -33,12 +33,17 @@ else
     EditModelSaving="OnEditModelSaving"
     DataItemDeleting="OnDataItemDeleting"
     KeyFieldName="Isbn"
+    SelectionMode="GridSelectionMode.Multiple"
+    PageSizeSelectorAllRowsItemVisible="true"
     EditMode="GridEditMode.PopupEditForm"
+    SelectedDataItems="@SelectedDataItems"
+    SelectedDataItemsChanged="OnSelectedDataItemsChanged"
     FocusedRowEnabled=true
     PopupEditFormCssClass="my-style"
     PopupEditFormHeaderText="@title"
     @ref=MyGrid>
         <Columns>
+            <DxGridSelectionColumn ShowInColumnChooser="false" Width="50"></DxGridSelectionColumn>
             <!-- Cột ID, kiểu uniqueidentifier -->
             <DxGridDataColumn Caption="ID" FieldName="Id" Visible="false" />
 
@@ -142,23 +147,27 @@ else
                 IconCssClass="oi oi-trash"
                 CssClass="me-2 delete HButton"
                 Click="OnDelete" />
+                <DxToolbarItem Text="Order"
+                IconCssClass="fa-solid fa-cart-shopping"
+                CssClass="me-2 order HButton"
+                Click="OnOrder" />
 
                 <DxToolbarItem Text="Column Chooser"
                 IconCssClass="oi oi-cog"
                 CssClass="column-chooser-button ms-3 chooser-column HButton"
                 BeginGroup="true"
                 Click="OnShowColumnChooser" />
-                
+
                 <DxToolbarItem BeginGroup="true"
-                           Alignment="ToolbarItemAlignment.Right">
+                Alignment="ToolbarItemAlignment.Right">
                     <Template Context="itemContext">
                         <div class="d-flex flex-row align-items-center h-100">
                             <DxSearchBox CssClass="search py-0" style="width:400px;"
-                                         Text="@searchText"
-                                         InputDelay="1000"
-                                         TextChanged="@Search"
-                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                         aria-label="Search" />
+                            Text="@searchText"
+                            InputDelay="1000"
+                            TextChanged="@Search"
+                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                            aria-label="Search" />
                         </div>
                     </Template>
                 </DxToolbarItem>
@@ -168,116 +177,236 @@ else
         <EditFormTemplate Context="editFormContext">
             <DxFormLayout CssClass="my-form-layout">
 
-                <div class="row">
-                    <!-- ISBN -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="ISBN:" CssClass="custom-item">
-                            <DxTextBox @bind-Text="@selectedItem.Isbn" CssClass="form-control-solid control" />
-                            <ValidationMessage For="@(() => selectedItem.Isbn)" />
-                        </DxFormLayoutItem>
+                @if (!IsOrder)
+                {
+                    <div class="row">
+
+                        <!-- ISBN -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="ISBN:" CssClass="custom-item">
+                                <DxTextBox @bind-Text="@selectedItem.Isbn" CssClass="form-control-solid control" />
+                                <ValidationMessage For="@(() => selectedItem.Isbn)" />
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <!-- Title -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Title:" CssClass="custom-item">
+                                <DxTextBox @bind-Text="@selectedItem.Title" CssClass="form-control-solid control" />
+                                <ValidationMessage For="@(() => selectedItem.Title)" />
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Category:" CssClass="custom-item">
+                                <DxComboBox Data="@categories"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                @bind-Value="@selectedItem.categoryId"
+                                TextFieldName="@nameof(selectedCategory.Name)"
+                                ValueFieldName="@nameof(selectedCategory.id)" />
+                                <ValidationMessage For="@(() => selectedItem.categoryId)" />
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <!-- Author -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Author:" CssClass="custom-item">
+                                <DxComboBox Data="@authors"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                @bind-Value="@selectedItem.authorId"
+                                TextFieldName="@nameof(selectedAuthor.Name)"
+                                ValueFieldName="@nameof(selectedAuthor.id)" />
+                                <ValidationMessage For="@(() => selectedItem.authorId)" />
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <!-- Publisher -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Publisher:" CssClass="custom-item">
+                                <DxComboBox Data="@publishers"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                @bind-Value="@selectedItem.publisherId"
+                                TextFieldName="@nameof(selectedPublisher.Name)"
+                                ValueFieldName="@nameof(selectedPublisher.id)" />
+                                <ValidationMessage For="@(() => selectedItem.publisherId)" />
+
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <!-- Year of Publication -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Year of Publication:">
+                                <DxSpinEdit @bind-Value="@selectedItem.YearOfPublication" MinValue="1901" MaxValue="2100" style="min-width:100px;"/>
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Quantity:" CssClass="custom-item">
+                                <DxSpinEdit @bind-Value="@selectedItem.Quantity" MinValue="0" />
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Price:" CssClass="custom-item">
+                                <DxSpinEdit @bind-Value="@selectedItem.Price" DisplayFormat="N0" MinValue="10000" />
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Image URL:" CssClass="custom-item">
+                                <DxTextBox @bind-Text="@selectedItem.Image" CssClass="form-control-solid control" />
+                                <ValidationMessage For="@(() => selectedItem.Image)" />
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <!-- Is Deleted -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Is Deleted:" CssClass="custom-item">
+                                <DxCheckBox @bind-Checked="@selectedItem.isDeleted" />
+                            </DxFormLayoutItem>
+                        </div>
+                    </div>
+                    <img src="@selectedItem.Image" style="width :200px; height:200px; " alt="Alternate Text" />
+
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Customer:" CssClass="custom-item">
+                                <DxComboBox Data="@customersCreate"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                @bind-Value="@orderItem.CustomerId"
+                                TextFieldName="@nameof(selectedCustomer.FullName)"
+                                SelectedItemChanged="(Customer? data)=> OnChangeCustomer(data)"
+                                ValueFieldName="@nameof(selectedCustomer.id)" />
+                            </DxFormLayoutItem>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="SĐT:" CssClass="custom-item">
+                                <DxTextBox @bind-Text="@selectedCustomer.phone" Enabled="false" />
+                            </DxFormLayoutItem>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Day of bitrh:" CssClass="custom-item">
+                                <DxDateEdit @bind-Date="@selectedCustomer.dateOfBirth" Enabled="false" />
+                            </DxFormLayoutItem>
+                        </div>
+                        <!-- Promotion -->
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Promotion:" CssClass="custom-item">
+                                <DxComboBox Data="@promotionsCreate"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                @bind-Value="@orderItem.PromotionId"
+                                TextFieldName="@nameof(selectedPromotion.name)"
+                                ValueFieldName="@nameof(selectedPromotion.id)"
+                                SelectedItemChanged="(Promotion? data)=> OnChangePromotion(data)" />
+                            </DxFormLayoutItem>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Condition:" CssClass="custom-item">
+                                <DxSpinEdit @bind-Value="@selectedPromotion.condition" Mask="###,###,###,###,##0"
+                                DisplayFormat="{0:n0}"
+                                Enabled="false" ShowSpinButtons="false" />
+                            </DxFormLayoutItem>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Discount percent(%):" CssClass="custom-item">
+                                @{
+                                    string abc = $"{(@selectedPromotion.discountPercent * 100).ToString()}%";
+                                }
+                                <DxTextBox @bind-Text="@abc" Enabled="false" />
+                            </DxFormLayoutItem>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <DxFormLayoutItem Caption="Remaining quantity:" CssClass="custom-item">
+                                <DxSpinEdit @bind-Value="@selectedPromotion.quantity"
+                                Enabled="false"
+                                ShowSpinButtons="false" />
+                            </DxFormLayoutItem>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-12" style="margin-left:12px;">
+                            <h4> Order Item:</h4>
+                        </div>
+                        <div class="col-lg-12 col-sm-12">
+                            <DxFormLayoutItem Caption="Sum:" CssClass="custom-item">
+                                <DxSpinEdit @bind-Value="@sum" Mask="###,###,###,###,##0"
+                                Enabled="false"
+                                ShowSpinButtons="false" />
+                            </DxFormLayoutItem>
+                        </div>
+                        @foreach (var item in ListOrderItem)
+                        {
+                            <div class="col-4">
+                                <DxFormLayoutItem Caption="Book:" CssClass="custom-item">
+                                    <DxComboBox Data="@books"
+                                    SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                    @bind-Value="@item.BookId"
+                                    TextFieldName="@nameof(selectedBook.Title)"
+                                    ValueFieldName="@nameof(selectedBook.id)"
+                                    SelectedItemChanged="(Book data)=> OnChangeBook(item, data)" />
+                                </DxFormLayoutItem>
+                            </div>
+                            <div class="col-4">
+                                <DxFormLayoutItem Caption="Quantity:" CssClass="custom-item">
+                                    <DxSpinEdit Value="@item.Quantity"
+                                    ValueChanged="@((int newValue) => OnQuantityChanged(newValue, item))"
+                                    ValueExpression="@(() => item.Quantity)"
+                                    MinValue="1" />
+                                </DxFormLayoutItem>
+                            </div>
+                            <div class="col-4">
+                                <DxFormLayoutItem Caption="Price:" CssClass="custom-item">
+                                    <DxSpinEdit @bind-Value="@item.Price" Mask="###,###,###,###,##0"
+                                    DisplayFormat="{0:n0}"
+                                    MaxValue="999999999999999"
+                                    MinValue="10000"
+                                    Enabled="false" />
+                                </DxFormLayoutItem>
+                            </div>
+                        }
+                        <div class="col-12" style="margin: 12px 20px 0 0;">
+                            <DxButton Click="@AddOrderItem"
+                            Text="Add Item"
+                            IconCssClass="fa-solid fa-plus icon-bt"
+                            CssClass="displayStyle btn-success" />
+
+                        </div>
                     </div>
 
-                    <!-- Title -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="Title:" CssClass="custom-item">
-                            <DxTextBox @bind-Text="@selectedItem.Title" CssClass="form-control-solid control" />
-                            <ValidationMessage For="@(() => selectedItem.Title)" />
-                        </DxFormLayoutItem>
-                    </div>
-
-                    <!-- Category -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="Category:" CssClass="custom-item">
-                            <DxComboBox Data="@categories"
-                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                            @bind-Value="@selectedItem.categoryId"
-                            TextFieldName="@nameof(selectedCategory.Name)"
-                            ValueFieldName="@nameof(selectedCategory.id)" />
-                            <ValidationMessage For="@(() => selectedItem.categoryId)" />
-                        </DxFormLayoutItem>
-                    </div>
-
-                    <!-- Author -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="Author:" CssClass="custom-item">
-                            <DxComboBox Data="@authors"
-                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                            @bind-Value="@selectedItem.authorId"
-                            TextFieldName="@nameof(selectedAuthor.Name)"
-                            ValueFieldName="@nameof(selectedAuthor.id)" />
-                            <ValidationMessage For="@(() => selectedItem.authorId)" />
-                        </DxFormLayoutItem>
-                    </div>
-
-                    <!-- Publisher -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="Publisher:" CssClass="custom-item">
-                            <DxComboBox Data="@publishers"
-                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                            @bind-Value="@selectedItem.publisherId"
-                            TextFieldName="@nameof(selectedPublisher.Name)"
-                            ValueFieldName="@nameof(selectedPublisher.id)" />
-                            <ValidationMessage For="@(() => selectedItem.publisherId)" />
-
-                        </DxFormLayoutItem>
-                    </div>
-
-                    <!-- Year of Publication -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="Year of Publication:">
-                            <DxSpinEdit @bind-Value="@selectedItem.YearOfPublication" MinValue="1901" MaxValue="2100" style="min-width:100px;"/>
-                        </DxFormLayoutItem>
-                    </div>
-
-                    <!-- Quantity -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="Quantity:" CssClass="custom-item">
-                            <DxSpinEdit @bind-Value="@selectedItem.Quantity" MinValue="0" />
-                        </DxFormLayoutItem>
-                    </div>
-
-                    <!-- Price -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="Price:" CssClass="custom-item">
-                            <DxSpinEdit @bind-Value="@selectedItem.Price" DisplayFormat="N0" MinValue="10000" />
-                        </DxFormLayoutItem>
-                    </div>
-
-                    <!-- Image -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="Image URL:" CssClass="custom-item">
-                            <DxTextBox @bind-Text="@selectedItem.Image" CssClass="form-control-solid control" />
-                            <ValidationMessage For="@(() => selectedItem.Image)" />
-                        </DxFormLayoutItem>
-                    </div>
-
-                    <!-- Is Deleted -->
-                    <div class="col-lg-6 col-sm-12">
-                        <DxFormLayoutItem Caption="Is Deleted:" CssClass="custom-item">
-                            <DxCheckBox @bind-Checked="@selectedItem.isDeleted" />
-                        </DxFormLayoutItem>
-                    </div>
-                </div>
-                <img src="@selectedItem.Image" style="width :200px; height:200px; " alt="Alternate Text" />
+                }
 
             </DxFormLayout>
         </EditFormTemplate>
     </DxGrid>
 }
 
+
 @code {
     string urlGrid = "api/book";
+    string urlOrder = "api/order";
     string urlCategory = "api/category";
     string urlAuthor = "api/author";
     string urlPublisher = "api/publisher";
+    string urlCustomer = "api/customer";
+    string urlPromotion = "api/promotion";
     String title { get; set; } = "";
     String searchText { get; set; } = "";
     bool enableEdit { get; set; } = true;
+    bool IsOrder { get; set; } = false;
     List<int> ListPage = new List<int> { 10, 20, 30, 50, 100 };
     [Inject] IToastNotificationService ToastService { get; set; }
     List<Book>? ListGrid { get; set; } = new();
     List<Book>? ListBook { get; set; } = new();
+    List<Book>? books { get; set; } = new();
+    IReadOnlyList<Book> SelectedDataItems { get; set; }
     Book selectedItem { get; set; } = new();
+    Order orderItem { get; set; } = new();
     List<Category>? categories { get; set; } = new();
     Category? selectedCategory { get; set; } = new();
     Category? filterCategory { get; set; }
@@ -287,9 +416,22 @@ else
     List<Publisher>? publishers { get; set; } = new();
     Publisher? selectedPublisher { get; set; } = new();
     Publisher? filterPublisher { get; set; }
+    List<Customer>? customers { get; set; } = new();
+    List<Customer>? customersCreate { get; set; } = new();
+    Customer selectedCustomer { get; set; } = new();
+    List<Promotion>? promotions { get; set; } = new();
+    List<Promotion>? promotionsCreate { get; set; } = new();
+    Promotion selectedPromotion { get; set; } = new();
+    List<OrderItem> ListOrderItem { get; set; } = new();
+    Book selectedBook { get; set; } = new();
+
+    decimal sum { get; set; } = 0;
     IGrid MyGrid { get; set; }
+    DxPopup myPopup { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        loadCustomer();
+        loadPromotion();
         loadCategory();
         loadAuthor();
         loadPublisher();
@@ -301,6 +443,19 @@ else
         var result = await Http.GetFromJsonAsync<List<Book>>(urlGrid);
         ListBook = result.ToList();
         ListGrid = ListBook.ToList();
+        books = ListBook.Where(dt => dt.isDeleted == false).ToList();
+        StateHasChanged();
+    }
+    async void loadPromotion()
+    {
+        promotions = await Http.GetFromJsonAsync<List<Promotion>>(urlPromotion);
+        promotionsCreate = promotions.Where(data => data.IsDeleted == false).ToList();
+        StateHasChanged();
+    }
+    async void loadCustomer()
+    {
+        customers = await Http.GetFromJsonAsync<List<Customer>>(urlCustomer);
+        customersCreate = customers.Where(data => data.IsDeleted == false).ToList();
         StateHasChanged();
     }
     async void loadCategory()
@@ -325,13 +480,14 @@ else
     void OnCustomizeEditModel(GridCustomizeEditModelEventArgs e)
     {
         selectedItem = (Book)e.EditModel;
-        if (e.IsNew)
+
+        if (e.IsNew && !IsOrder)
         {
             title = "Create form";
             enableEdit = true;
             selectedCategory = new();
         }
-        else
+        else if(!IsOrder)
         {
             selectedCategory = categories?.FirstOrDefault(c => c.id == selectedItem.categoryId);    
             selectedAuthor = authors?.FirstOrDefault(c => c.id == selectedItem.authorId);    
@@ -339,25 +495,34 @@ else
             title = "View form";
             enableEdit = false;
         }
+        else
+        {
+            title = "Order";
+        }
         StateHasChanged();
     }
     async Task OnEditModelSaving(GridEditModelSavingEventArgs e)
     {
         HttpResponseMessage response;
-        if (e.IsNew)
+        if (e.IsNew && !IsOrder)
         {
             // Tạo mới
             selectedItem = (Book)e.EditModel;
             response = await Http.PostAsJsonAsync(urlGrid, selectedItem);
 
         }
-        else
+        else if (!IsOrder)
         {
             // Sửa
             // e.CopyChangesToDataItem(); Copy từ model vào data item hiển thị
             selectedItem = (Book)e.EditModel;
             response = await Http.PutAsJsonAsync($"{urlGrid}/{selectedItem.id}", selectedItem);
             var errorContent = await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            orderItem.Items = ListOrderItem;
+            response = await Http.PostAsJsonAsync(urlOrder, orderItem);
         }
         var result = await response.Content.ReadFromJsonAsync<ApiMessageResponse>();
         if (response.IsSuccessStatusCode)
@@ -441,21 +606,44 @@ else
 
     async Task OnCreateNew(ToolbarItemClickEventArgs e)
     {
+
+        IsOrder = false;
         await MyGrid.StartEditNewRowAsync();
     }
 
     async Task OnEdit(ToolbarItemClickEventArgs e)
     {
+        IsOrder = false;
         if (MyGrid.GetFocusedDataItem() != null)
             await MyGrid.StartEditDataItemAsync(MyGrid.GetFocusedDataItem());
     }
 
     void OnDelete(ToolbarItemClickEventArgs e)
     {
+        IsOrder = false;
+
         if (MyGrid.GetFocusedDataItem() != null)
             MyGrid.ShowDataItemDeleteConfirmation(MyGrid.GetFocusedDataItem());
     }
-
+    async Task OnOrder(ToolbarItemClickEventArgs e)
+    {
+        IsOrder = true;
+        ListOrderItem = new();
+        selectedCustomer = new();
+        selectedPromotion = new();
+        foreach(var item in SelectedDataItems)
+        {
+            if(item.Quantity> 0 && item.isDeleted == false)
+            {
+                var orderItem = new OrderItem();
+                orderItem.BookId = item.id;
+                orderItem.Price = item.Price;
+                ListOrderItem.Add(orderItem);
+            }
+        }
+        if (MyGrid.GetFocusedDataItem() != null)
+            await MyGrid.StartEditDataItemAsync(MyGrid.GetFocusedDataItem());
+    }
     void OnShowColumnChooser()
     {
         MyGrid.ShowColumnChooser(".column-chooser-button");
@@ -473,7 +661,7 @@ else
         }
         else
         {
-			ListGrid = ListBook.ToList();
+            ListGrid = ListBook.ToList();
         }
         if (filterAuthor != null){
             ListGrid = ListGrid.Where(x => x.authorId == filterAuthor.id).ToList();
@@ -502,7 +690,7 @@ else
         {
             ListGrid = ListGrid.Where(x => x.publisherId == filterPublisher.id).ToList();
         }
-		StateHasChanged();
+        StateHasChanged();
     }
     async void SelectedPublisherFilter(Publisher value)
     {
@@ -532,5 +720,59 @@ else
         ListGrid = result.ToList();
         StateHasChanged();
 
+    }
+    void OnSelectedDataItemsChanged(IReadOnlyList<object> newSelection)
+    {
+        if (newSelection is not null)
+        {
+            SelectedDataItems = newSelection.Cast<Book>().ToList();
+            StateHasChanged(); // Cập nhật giao diện
+        }
+    }
+    
+    void OnChangePromotion(Promotion? data)
+    {
+        selectedPromotion = data;
+        OnChangeSum();
+        StateHasChanged();
+    }
+    void OnChangeCustomer(Customer? data)
+    {
+        selectedCustomer = data;
+        StateHasChanged();
+    }
+    void OnChangeSum()
+    {
+        decimal total = 0;
+        foreach (var data in ListOrderItem)
+        {
+            total += data.Price * data.Quantity;
+        }
+        if (selectedPromotion != null)
+        {
+            if (total >= selectedPromotion.condition && selectedPromotion.quantity > 0)
+            {
+                sum = total * (1 - (decimal)selectedPromotion.discountPercent);
+            }
+            else sum = total;
+        }
+        StateHasChanged();
+    }
+    void OnQuantityChanged(int newValue, OrderItem item)
+    {
+        if (item != null)
+        {
+            item.Quantity = newValue;
+        }
+        OnChangeSum(); // Gọi hàm tính tổng
+    }
+    void AddOrderItem()
+    {
+        ListOrderItem.Add(new OrderItem());
+    }
+    void OnChangeBook(OrderItem item, Book data)
+    {
+        item.Price = data.Price;
+        OnChangeSum();
     }
 }

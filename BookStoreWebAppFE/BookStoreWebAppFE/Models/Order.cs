@@ -7,7 +7,6 @@ namespace BookStoreWebAppFE.Models
     {
         public Guid id { get; set; }
         public Guid StaffId { get; set; }
-
         public Guid CustomerId { get; set; }
 
         public Guid? PromotionId { get; set; }

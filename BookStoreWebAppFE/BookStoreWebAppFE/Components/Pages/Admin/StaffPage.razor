@@ -191,11 +191,64 @@ else
         loadData();
         // loadCategory();
     }
+
     async void loadData()
     {
-        ListGrid = await Http.GetFromJsonAsync<List<Staff>>(urlGrid);
+        try
+        {
+            var response = await Http.GetAsync(urlGrid);
+            if (response.IsSuccessStatusCode)
+            {
+                ListGrid = await response.Content.ReadFromJsonAsync<List<Staff>>();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                ToastService.ShowToast(new ToastOptions
+                {
+                    ProviderName = "Overview",
+                    ThemeMode = ToastThemeMode.Saturated,
+                    RenderStyle = ToastRenderStyle.Danger,
+                    Title = "You do not have permission to access this page."
+                });
+
+                ListGrid = null; // Dừng hiển thị bảng
+            }
+            else
+            {
+                ToastService.ShowToast(new ToastOptions
+                {
+                    ProviderName = "Overview",
+                    ThemeMode = ToastThemeMode.Saturated,
+                    RenderStyle = ToastRenderStyle.Danger,
+                    Title = $"Lỗi: {response.StatusCode}"
+                });
+
+                ListGrid = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowToast(new ToastOptions
+            {
+                ProviderName = "Overview",
+                ThemeMode = ToastThemeMode.Saturated,
+                RenderStyle = ToastRenderStyle.Danger,
+                Title = $"Lỗi hệ thống: {ex.Message}"
+            });
+
+            ListGrid = null;
+        }
+
         StateHasChanged();
     }
+
+    // cmt code cua Ngan bi loi
+    // async void loadData()
+    // {
+    //     ListGrid = await Http.GetFromJsonAsync<List<Staff>>(urlGrid);
+    //     StateHasChanged();
+    // }
+
     // async void loadCategory()
     // {
     //     categories = await Http.GetFromJsonAsync<List<Category>>(urlCategory);

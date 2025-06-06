@@ -391,41 +391,114 @@ CloseOnOutsideClick="true">
 		editContext = new EditContext(staffModel);
 		editContext2 = new EditContext(loginModel);
 	}
+
+	//refactor by nnthienphuc
 	async Task OnSignInClick()
 	{
+		try
+		{
+			var loginSuccess = await authenticationService.Login(loginModel.Email, loginModel.Password);
 
-		if (await authenticationService.Login(loginModel.Email, loginModel.Password))
-		{
-			navigationManager.NavigateTo("admin/book", forceLoad: true);
-		}
-		StateHasChanged();
-	}
-	async Task OnSignUpClick()
-	{
-		string result = await authenticationService.Register(staffModel);
-		if (result.Contains("Success"))
-		{
-			ToastService.ShowToast(new ToastOptions() // SUCCESS
-				{
-					ProviderName = "Overview",
-					ThemeMode = ToastThemeMode.Saturated,
-					RenderStyle = ToastRenderStyle.Success,
-					Title = $"{result}"
-				});
-		}
-		else
-		{
-			ToastService.ShowToast(new ToastOptions() //ERROR
+			if (loginSuccess)
+			{
+				navigationManager.NavigateTo("admin/book", forceLoad: true);
+			}
+			else
+			{
+				// Nếu thất bại, gọi lại API login để đọc message lỗi
+				var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+				var errorMessage = await response.Content.ReadAsStringAsync();
+
+				ToastService.ShowToast(new ToastOptions()
 				{
 					ProviderName = "Overview",
 					ThemeMode = ToastThemeMode.Saturated,
 					RenderStyle = ToastRenderStyle.Danger,
-					Title = $"{result}"
+					Title = errorMessage ?? "Login failed. Please check your credentials."
 				});
+			}
 		}
-		
+		catch (Exception ex)
+		{
+			ToastService.ShowToast(new ToastOptions()
+			{
+				ProviderName = "Overview",
+				ThemeMode = ToastThemeMode.Saturated,
+				RenderStyle = ToastRenderStyle.Danger,
+				Title = $"System error: {ex.Message}"
+			});
+		}
+	}
+
+	async Task OnSignUpClick()
+	{
+		string result = await authenticationService.Register(staffModel);
+
+		if (!result.StartsWith("Error"))
+		{
+			ToastService.ShowToast(new ToastOptions()
+			{
+				ProviderName = "Overview",
+				ThemeMode = ToastThemeMode.Saturated,
+				RenderStyle = ToastRenderStyle.Success,
+				Title = $"{result}" // VD: "Registration successful. Please check your email to activate your account."
+			});
+
+			await Task.Delay(1000); // Cho người dùng thấy Toast 1 giây
+			navigationManager.NavigateTo("/", forceLoad: true);
+		}
+		else
+		{
+			ToastService.ShowToast(new ToastOptions()
+			{
+				ProviderName = "Overview",
+				ThemeMode = ToastThemeMode.Saturated,
+				RenderStyle = ToastRenderStyle.Danger,
+				Title = $"{result.Replace("Error: ", "")}" // Gọn gàng hơn
+			});
+		}
+
 		StateHasChanged();
 	}
+
+
+	// async Task OnSignInClick()
+	// {
+
+	// 	if (await authenticationService.Login(loginModel.Email, loginModel.Password))
+	// 	{
+	// 		navigationManager.NavigateTo("admin/book", forceLoad: true);
+	// 	}
+	// 	StateHasChanged();
+	// }
+
+	// async Task OnSignUpClick()
+	// {
+	// 	string result = await authenticationService.Register(staffModel);
+	// 	if (result.Contains("Register"))
+	// 	{
+	// 		ToastService.ShowToast(new ToastOptions()
+	// 			{
+	// 				ProviderName = "Overview",
+	// 				ThemeMode = ToastThemeMode.Saturated,
+	// 				RenderStyle = ToastRenderStyle.Success,
+	// 				Title = $"{result}"
+	// 			});
+	// 	}
+	// 	else
+	// 	{
+	// 		ToastService.ShowToast(new ToastOptions()
+	// 			{
+	// 				ProviderName = "Overview",
+	// 				ThemeMode = ToastThemeMode.Saturated,
+	// 				RenderStyle = ToastRenderStyle.Danger,
+	// 				Title = $"{result}"
+	// 			});
+	// 	}
+		
+	// 	StateHasChanged();
+	// }
+
 	async void ShowResetPopup()
 	{
 		isResetPopupVisible = true;

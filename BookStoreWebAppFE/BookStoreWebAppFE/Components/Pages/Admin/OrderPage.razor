@@ -139,12 +139,12 @@ else
         </ToolbarTemplate>
         <EditFormTemplate Context="editFormContext">
             <DxFormLayout CssClass="my-form-layout">
-                <div class="row" style="width: 100%;">                                      
+                <div class="row" style="width: 100%;">    
                         <!-- Customer -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Customer:" CssClass="custom-item">
                                 <DxComboBox Data="@customersCreate"
-                                SearchFilterCondition="ListSearchFilterCondition.Contains"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                                 @bind-Value="@selectedItem.CustomerId"
                                 TextFieldName="@nameof(selectedCustomer.FullName)"
                                 SelectedItemChanged="(Customer data)=> OnChangeCustomer(data)"
@@ -165,7 +165,7 @@ else
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Promotion:" CssClass="custom-item">
                                 <DxComboBox Data="@promotionsCreate"
-                                SearchFilterCondition="ListSearchFilterCondition.Contains"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                                 @bind-Value="@selectedItem.PromotionId"
                                 TextFieldName="@nameof(selectedPromotion.name)"
                                 ValueFieldName="@nameof(selectedPromotion.id)"
@@ -210,7 +210,7 @@ else
                             <div class="col-4" >
                                 <DxFormLayoutItem Caption="Book:" CssClass="custom-item">
                                     <DxComboBox Data="@books"
-                                    SearchFilterCondition="ListSearchFilterCondition.Contains"
+                                    SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                                     @bind-Value="@item.BookId"
                                     TextFieldName="@nameof(selectedBook.Title)"
                                     ValueFieldName="@nameof(selectedBook.id)"

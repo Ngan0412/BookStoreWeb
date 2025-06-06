@@ -148,10 +148,26 @@ else
                 CssClass="column-chooser-button ms-3 chooser-column HButton"
                 BeginGroup="true"
                 Click="OnShowColumnChooser" />
+                
+                <DxToolbarItem BeginGroup="true"
+                           Alignment="ToolbarItemAlignment.Right">
+                    <Template Context="itemContext">
+                        <div class="d-flex flex-row align-items-center h-100">
+                            <DxSearchBox CssClass="search py-0" style="width:400px;"
+                                         Text="@searchText"
+                                         InputDelay="1000"
+                                         TextChanged="@Search"
+                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                         aria-label="Search" />
+                        </div>
+                    </Template>
+                </DxToolbarItem>
             </DxToolbar>
+
         </ToolbarTemplate>
         <EditFormTemplate Context="editFormContext">
             <DxFormLayout CssClass="my-form-layout">
+
                 <div class="row">
                     <!-- ISBN -->
                     <div class="col-lg-6 col-sm-12">
@@ -173,7 +189,7 @@ else
                     <div class="col-lg-6 col-sm-12">
                         <DxFormLayoutItem Caption="Category:" CssClass="custom-item">
                             <DxComboBox Data="@categories"
-                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                             @bind-Value="@selectedItem.categoryId"
                             TextFieldName="@nameof(selectedCategory.Name)"
                             ValueFieldName="@nameof(selectedCategory.id)" />
@@ -185,7 +201,7 @@ else
                     <div class="col-lg-6 col-sm-12">
                         <DxFormLayoutItem Caption="Author:" CssClass="custom-item">
                             <DxComboBox Data="@authors"
-                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                             @bind-Value="@selectedItem.authorId"
                             TextFieldName="@nameof(selectedAuthor.Name)"
                             ValueFieldName="@nameof(selectedAuthor.id)" />
@@ -197,7 +213,7 @@ else
                     <div class="col-lg-6 col-sm-12">
                         <DxFormLayoutItem Caption="Publisher:" CssClass="custom-item">
                             <DxComboBox Data="@publishers"
-                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                             @bind-Value="@selectedItem.publisherId"
                             TextFieldName="@nameof(selectedPublisher.Name)"
                             ValueFieldName="@nameof(selectedPublisher.id)" />
@@ -242,6 +258,8 @@ else
                         </DxFormLayoutItem>
                     </div>
                 </div>
+                <img src="@selectedItem.Image" style="width :200px; height:200px; " alt="Alternate Text" />
+
             </DxFormLayout>
         </EditFormTemplate>
     </DxGrid>
@@ -253,6 +271,7 @@ else
     string urlAuthor = "api/author";
     string urlPublisher = "api/publisher";
     String title { get; set; } = "";
+    String searchText { get; set; } = "";
     bool enableEdit { get; set; } = true;
     List<int> ListPage = new List<int> { 10, 20, 30, 50, 100 };
     [Inject] IToastNotificationService ToastService { get; set; }
@@ -505,5 +524,13 @@ else
             ListGrid = ListGrid.Where(x => x.authorId == filterAuthor.id).ToList();
         }
         StateHasChanged();
+    }
+    async void Search(string newValue)
+    {
+        searchText = newValue;
+        var result = await Http.GetFromJsonAsync<List<Book>>($"{urlGrid}/search?keyword={newValue}");
+        ListGrid = result.ToList();
+        StateHasChanged();
+
     }
 }

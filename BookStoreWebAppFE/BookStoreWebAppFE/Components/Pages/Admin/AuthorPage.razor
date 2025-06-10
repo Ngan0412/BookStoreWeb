@@ -23,7 +23,7 @@
 }
 else
 {
-    <DxGrid Data="@ListGrid" style="height:50vh;"
+    <DxGrid Data="@ListGrid" style="height:80vh;"
             PageSize="10"
             PageSizeSelectorItems="@ListPage"
             ShowFilterRow="true"
@@ -40,7 +40,7 @@ else
         <Columns>
             <DxGridDataColumn Caption="Id" FieldName="id" />
             <DxGridDataColumn Caption="Name" FieldName="Name" />
-            <DxGridDataColumn Caption="Is Deleted" FieldName="IsDeleted" />
+            <DxGridDataColumn Caption="Is Delete" FieldName="IsDeleted" Width="80" />
 
         </Columns>
         <ToolbarTemplate>

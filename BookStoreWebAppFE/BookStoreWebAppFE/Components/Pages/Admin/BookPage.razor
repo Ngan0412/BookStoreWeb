@@ -24,7 +24,7 @@
 }
 else
 {
-    <DxGrid Data="@ListGrid" style="height:70vh;"
+    <DxGrid Data="@ListGrid" style="height:80vh;"
     PageSize="10"
     PageSizeSelectorItems="@ListPage"
     ShowFilterRow="true"
@@ -278,7 +278,7 @@ else
                     <div class="row">
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Customer:" CssClass="custom-item">
-                                <DxComboBox Data="@customersCreate"
+                                <DxComboBox Data="@customersCreate" Id="CustomerComboboxId"
                                 SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                                 @bind-Value="@orderItem.CustomerId"
                                 TextFieldName="@nameof(selectedCustomer.FullName)"
@@ -299,7 +299,7 @@ else
                         <!-- Promotion -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Promotion:" CssClass="custom-item">
-                                <DxComboBox Data="@promotionsCreate"
+                                <DxComboBox Data="@promotionsCreate"  Id="PromotionComboboxId"
                                 SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                                 @bind-Value="@orderItem.PromotionId"
                                 TextFieldName="@nameof(selectedPromotion.name)"
@@ -631,16 +631,20 @@ else
         ListOrderItem = new();
         selectedCustomer = new();
         selectedPromotion = new();
-        foreach(var item in SelectedDataItems)
+        if(SelectedDataItems != null)
         {
-            if(item.Quantity> 0 && item.isDeleted == false)
+            foreach (var item in SelectedDataItems)
             {
-                var orderItem = new OrderItem();
-                orderItem.BookId = item.id;
-                orderItem.Price = item.Price;
-                ListOrderItem.Add(orderItem);
+                if (item.Quantity > 0 && item.isDeleted == false)
+                {
+                    var orderItem = new OrderItem();
+                    orderItem.BookId = item.id;
+                    orderItem.Price = item.Price;
+                    ListOrderItem.Add(orderItem);
+                }
             }
         }
+        
         if (MyGrid.GetFocusedDataItem() != null)
             await MyGrid.StartEditDataItemAsync(MyGrid.GetFocusedDataItem());
     }

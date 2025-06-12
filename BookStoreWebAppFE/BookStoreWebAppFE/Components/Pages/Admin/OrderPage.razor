@@ -1,4 +1,5 @@
 ﻿@page "/admin/order"
+@using System.Text.Json;
 
 @using BookStoreWebAppFE.Models
 @inject HttpClient Http
@@ -11,7 +12,7 @@
     AnimationType="ToastAnimationType.Slide"
     HorizontalAlignment="HorizontalAlignment.Right"
     VerticalAlignment="VerticalEdge.Top"
-    DisplayTime="TimeSpan.FromSeconds(2)"
+    DisplayTime="TimeSpan.FromSeconds(5)"
     Width="320px" />
 </div>
 <PageTitle>Order</PageTitle>
@@ -391,7 +392,7 @@ else
     async void loadPromotion()
     {
         promotions = await Http.GetFromJsonAsync<List<Promotion>>(urlPromotion);
-        promotionsCreate = promotions.Where(data => data.IsDeleted == false).ToList();
+        promotionsCreate = promotions.Where(data => data.IsDeleted == false && data.quantity > 0).ToList();
         StateHasChanged();
     }
 
@@ -467,27 +468,7 @@ else
                     Title = $"{result?.Message}"
                 });
         }
-        // ToastService.ShowToast(new ToastOptions()WARNING
-        //     {
-        //         ProviderName = "Overview",
-        //         ThemeMode = ToastThemeMode.Light,
-        //         RenderStyle = ToastRenderStyle.Warning,
-        //         Title = "Cannot open file",
-        //     });
-        // ToastService.ShowToast(new ToastOptions() ERROR
-        //     {
-        //         ProviderName = "Overview",
-        //         ThemeMode = ToastThemeMode.Saturated,
-        //         RenderStyle = ToastRenderStyle.Danger,
-        //         Title = "Job failed: 'validation'"
-        //     });
-        // ToastService.ShowToast(new ToastOptions() SUCCESS
-        //     {
-        //         ProviderName = "Overview",
-        //         ThemeMode = ToastThemeMode.Saturated,
-        //         RenderStyle = ToastRenderStyle.Success,
-        //         Title = "File download complete"
-        //     });
+        
         loadData();
         StateHasChanged();
     }

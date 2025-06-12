@@ -1,5 +1,6 @@
 ﻿@page "/admin/staff"
 
+@using System.Text.Json;
 @using BookStoreWebAppFE.Models
 @inject HttpClient Http
 @using DevExpress.Blazor
@@ -11,7 +12,7 @@
     AnimationType="ToastAnimationType.Slide"
     HorizontalAlignment="HorizontalAlignment.Right"
     VerticalAlignment="VerticalEdge.Top"
-                     DisplayTime="TimeSpan.FromSeconds(2)"
+    DisplayTime="TimeSpan.FromSeconds(5)"
     Width="320px" />
 </div>
 <PageTitle>Staff</PageTitle>
@@ -64,7 +65,7 @@ else
 
             <DxGridDataColumn Caption="Is Actived" FieldName="IsActived" />
             <DxGridDataColumn Caption="Is Deleted" FieldName="IsDeleted" />
-            
+
         </Columns>
         <ToolbarTemplate>
             <DxToolbar>
@@ -303,6 +304,26 @@ else
         }
         else
         {
+            if (string.IsNullOrEmpty(result?.Message))
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                string allErrors = "";
+
+                using (JsonDocument doc = JsonDocument.Parse(errorContent))
+                {
+                    var errorsElement = doc.RootElement.GetProperty("errors");
+
+                    foreach (var property in errorsElement.EnumerateObject())
+                    {
+                        foreach (var error in property.Value.EnumerateArray())
+                        {
+                            allErrors += error.GetString() + "\n";
+                        }
+                    }
+                }
+                result.Message = allErrors;
+
+            }
             ToastService.ShowToast(new ToastOptions() //ERROR
                 {
                     ProviderName = "Overview",
@@ -311,28 +332,10 @@ else
                     Title = $"{result?.Message}"
                 });
         }
-        // ToastService.ShowToast(new ToastOptions()WARNING
-        //     {
-        //         ProviderName = "Overview",
-        //         ThemeMode = ToastThemeMode.Light,
-        //         RenderStyle = ToastRenderStyle.Warning,
-        //         Title = "Cannot open file",
-        //     });
-        // ToastService.ShowToast(new ToastOptions() ERROR
-        //     {
-        //         ProviderName = "Overview",
-        //         ThemeMode = ToastThemeMode.Saturated,
-        //         RenderStyle = ToastRenderStyle.Danger,
-        //         Title = "Job failed: 'validation'"
-        //     });
-        // ToastService.ShowToast(new ToastOptions() SUCCESS
-        //     {
-        //         ProviderName = "Overview",
-        //         ThemeMode = ToastThemeMode.Saturated,
-        //         RenderStyle = ToastRenderStyle.Success,
-        //         Title = "File download complete"
-        //     });
+        
         loadData();
+        MyGrid.Reload();
+        StateHasChanged();
     }
 
     async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
@@ -363,6 +366,9 @@ else
                 });
         }
         loadData();
+        MyGrid.Reload();
+        StateHasChanged();
+
     }
    
     async Task OnCreateNew(ToolbarItemClickEventArgs e)

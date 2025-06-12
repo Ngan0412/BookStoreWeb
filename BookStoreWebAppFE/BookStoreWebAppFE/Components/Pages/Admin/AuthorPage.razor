@@ -1,4 +1,5 @@
 ﻿@page "/admin/author"
+@using System.Text.Json;
 
 @using BookStoreWebAppFE.Models
 @inject HttpClient Http
@@ -7,12 +8,12 @@
 
 <div class="d-flex align-items-center custom-toast-background">
     <DxToastProvider Name="Overview"
-                     MaxToastCount="5"
-                     AnimationType="ToastAnimationType.Slide"
-                     HorizontalAlignment="HorizontalAlignment.Right"
-                     VerticalAlignment="VerticalEdge.Top"
-                     DisplayTime="TimeSpan.FromSeconds(2)"
-                     Width="320px" />
+    MaxToastCount="5"
+    AnimationType="ToastAnimationType.Slide"
+    HorizontalAlignment="HorizontalAlignment.Right"
+    VerticalAlignment="VerticalEdge.Top"
+    DisplayTime="TimeSpan.FromSeconds(5)"
+    Width="320px" />
 </div>
 <PageTitle>Author</PageTitle>
 <h1>Author</h1>
@@ -24,19 +25,19 @@
 else
 {
     <DxGrid Data="@ListGrid" style="height:80vh;"
-            PageSize="10"
-            PageSizeSelectorItems="@ListPage"
-            ShowFilterRow="true"
-            PagerVisible="true"
-            CustomizeEditModel="OnCustomizeEditModel"
-            EditModelSaving="OnEditModelSaving"
-            DataItemDeleting="OnDataItemDeleting"
-            KeyFieldName="id"
-            EditMode="GridEditMode.PopupEditForm"
-            FocusedRowEnabled=true
-            PopupEditFormCssClass="my-style"
-            PopupEditFormHeaderText="@title"
-            @ref=MyGrid>
+    PageSize="10"
+    PageSizeSelectorItems="@ListPage"
+    ShowFilterRow="true"
+    PagerVisible="true"
+    CustomizeEditModel="OnCustomizeEditModel"
+    EditModelSaving="OnEditModelSaving"
+    DataItemDeleting="OnDataItemDeleting"
+    KeyFieldName="id"
+    EditMode="GridEditMode.PopupEditForm"
+    FocusedRowEnabled=true
+    PopupEditFormCssClass="my-style"
+    PopupEditFormHeaderText="@title"
+    @ref=MyGrid>
         <Columns>
             <DxGridDataColumn Caption="Id" FieldName="id" />
             <DxGridDataColumn Caption="Name" FieldName="Name" />
@@ -47,25 +48,25 @@ else
             <DxToolbar>
                 <DxToolbar>
                     <DxToolbarItem Text="Create"
-                                   IconCssClass="oi oi-plus"
-                                   CssClass="me-2 create HButton"
-                                   Click="OnCreateNew" />
+                    IconCssClass="oi oi-plus"
+                    CssClass="me-2 create HButton"
+                    Click="OnCreateNew" />
 
                     <DxToolbarItem Text="View"
-                                   IconCssClass="oi oi-pencil"
-                                   CssClass="me-2 edit HButton"
-                                   Click="OnEdit" />
+                    IconCssClass="oi oi-pencil"
+                    CssClass="me-2 edit HButton"
+                    Click="OnEdit" />
 
                     <DxToolbarItem Text="Delete"
-                                   IconCssClass="oi oi-trash"
-                                   CssClass="me-2 delete HButton"
-                                   Click="OnDelete" />
+                    IconCssClass="oi oi-trash"
+                    CssClass="me-2 delete HButton"
+                    Click="OnDelete" />
 
                     <DxToolbarItem Text="Column Chooser"
-                                   IconCssClass="oi oi-cog"
-                                   CssClass="column-chooser-button ms-3 chooser-column HButton"
-                                   BeginGroup="true"
-                                   Click="OnShowColumnChooser" />
+                    IconCssClass="oi oi-cog"
+                    CssClass="column-chooser-button ms-3 chooser-column HButton"
+                    BeginGroup="true"
+                    Click="OnShowColumnChooser" />
                 </DxToolbar>
             </DxToolbar>
         </ToolbarTemplate>
@@ -162,6 +163,26 @@ else
         }
         else
         {
+            if (string.IsNullOrEmpty(result?.Message))
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                string allErrors = "";
+
+                using (JsonDocument doc = JsonDocument.Parse(errorContent))
+                {
+                    var errorsElement = doc.RootElement.GetProperty("errors");
+
+                    foreach (var property in errorsElement.EnumerateObject())
+                    {
+                        foreach (var error in property.Value.EnumerateArray())
+                        {
+                            allErrors += error.GetString() + "\n";
+                        }
+                    }
+                }
+                result.Message = allErrors;
+
+            }
             ToastService.ShowToast(new ToastOptions() //ERROR
                 {
                     ProviderName = "Overview",
@@ -170,28 +191,11 @@ else
                     Title = $"{result?.Message}"
                 });
         }
-        // ToastService.ShowToast(new ToastOptions()WARNING
-        //     {
-        //         ProviderName = "Overview",
-        //         ThemeMode = ToastThemeMode.Light,
-        //         RenderStyle = ToastRenderStyle.Warning,
-        //         Title = "Cannot open file",
-        //     });
-        // ToastService.ShowToast(new ToastOptions() ERROR
-        //     {
-        //         ProviderName = "Overview",
-        //         ThemeMode = ToastThemeMode.Saturated,
-        //         RenderStyle = ToastRenderStyle.Danger,
-        //         Title = "Job failed: 'validation'"
-        //     });
-        // ToastService.ShowToast(new ToastOptions() SUCCESS
-        //     {
-        //         ProviderName = "Overview",
-        //         ThemeMode = ToastThemeMode.Saturated,
-        //         RenderStyle = ToastRenderStyle.Success,
-        //         Title = "File download complete"
-        //     });
+
         loadData();
+        MyGrid.Reload();
+        StateHasChanged();
+
     }
 
     async Task OnDataItemDeleting(GridDataItemDeletingEventArgs e)
@@ -222,6 +226,8 @@ else
                 });
         }
         loadData();
+        MyGrid.Reload();
+        StateHasChanged();
     }
 
     async Task OnCreateNew(ToolbarItemClickEventArgs e)

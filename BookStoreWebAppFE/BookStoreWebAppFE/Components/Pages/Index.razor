@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using System.Text.Json;
+
 @using BookStoreWebAppFE.Services
 @using BookStoreWebAppFE.Models
 @inject IAuthenticationService authenticationService
@@ -12,7 +14,7 @@
 	AnimationType="ToastAnimationType.Slide"
 	HorizontalAlignment="HorizontalAlignment.Right"
 	VerticalAlignment="VerticalEdge.Top"
-	DisplayTime="TimeSpan.FromSeconds(2)"
+	DisplayTime="TimeSpan.FromSeconds(5)"
 	Width="320px" />
 </div>
 <div class="container" id="container" style="margin: 10px;">
@@ -527,6 +529,26 @@ CloseOnOutsideClick="true">
 		}
 		else
 		{
+			if (string.IsNullOrEmpty(result?.Message))
+			{
+				string errorContent = await response.Content.ReadAsStringAsync();
+				string allErrors = "";
+
+				using (JsonDocument doc = JsonDocument.Parse(errorContent))
+				{
+					var errorsElement = doc.RootElement.GetProperty("errors");
+
+					foreach (var property in errorsElement.EnumerateObject())
+					{
+						foreach (var error in property.Value.EnumerateArray())
+						{
+							allErrors += error.GetString() + "\n";
+						}
+					}
+				}
+				result.Message = allErrors;
+
+			}
 			ToastService.ShowToast(new ToastOptions() //ERROR
 				{
 					ProviderName = "Overview",

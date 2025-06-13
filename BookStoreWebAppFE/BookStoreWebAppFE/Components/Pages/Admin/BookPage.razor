@@ -59,6 +59,7 @@ else
                 <FilterRowCellTemplate>
                     <DxComboBox Data="@categories"
                     @bind-Value="filterCategory"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                     TextFieldName="@nameof(selectedCategory.Name)"
                     SelectedItemChanged="(Category value)=>SelectedCategoryFilter(value)">
@@ -78,6 +79,7 @@ else
                 <FilterRowCellTemplate>
                     <DxComboBox Data="@authors"
                     @bind-Value="filterAuthor"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                     TextFieldName="@nameof(selectedAuthor.Name)"
                     SelectedItemChanged="(Author value)=>SelectedAuthorFilter(value)">
@@ -97,6 +99,7 @@ else
                 <FilterRowCellTemplate>
                     <DxComboBox Data="@publishers"
                     @bind-Value="filterPublisher"
+                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                     TextFieldName="@nameof(selectedPublisher.Name)"
                     SelectedItemChanged="(Publisher value)=>SelectedPublisherFilter(value)">
@@ -252,7 +255,7 @@ else
                         <!-- Price -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Price:" CssClass="custom-item">
-                                <DxSpinEdit @bind-Value="@selectedItem.Price" DisplayFormat="N0" MinValue="10000" />
+                                <DxSpinEdit @bind-Value="@selectedItem.Price" DisplayFormat="N0" />
                             </DxFormLayoutItem>
                         </div>
 

@@ -15,54 +15,53 @@
     VerticalAlignment="VerticalEdge.Top"
     DisplayTime="TimeSpan.FromSeconds(5)"
     Width="320px" />
-</div>
-<PageTitle>Book</PageTitle>
-<h1>Book</h1>
+</div><PageTitle>Sách</PageTitle>
+<h1>Sách</h1>
 
 @if (ListGrid == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Đang tải...</em></p>
 }
 else
 {
     <DxGrid Data="@ListGrid" style="height:80vh;"
-    PageSize="10"
-    PageSizeSelectorItems="@ListPage"
-    ShowFilterRow="true"
-    PagerVisible="true"
-    CustomizeEditModel="OnCustomizeEditModel"
-    EditModelSaving="OnEditModelSaving"
-    DataItemDeleting="OnDataItemDeleting"
-    KeyFieldName="Isbn"
-    SelectionMode="GridSelectionMode.Multiple"
-    PageSizeSelectorAllRowsItemVisible="true"
-    EditMode="GridEditMode.PopupEditForm"
-    SelectedDataItems="@SelectedDataItems"
-    SelectedDataItemsChanged="OnSelectedDataItemsChanged"
-    FocusedRowEnabled=true
-    PopupEditFormCssClass="my-style"
-    PopupEditFormHeaderText="@title"
-    @ref=MyGrid>
+            PageSize="10"
+            PageSizeSelectorItems="@ListPage"
+            ShowFilterRow="true"
+            PagerVisible="true"
+            CustomizeEditModel="OnCustomizeEditModel"
+            EditModelSaving="OnEditModelSaving"
+            DataItemDeleting="OnDataItemDeleting"
+            KeyFieldName="Isbn"
+            SelectionMode="GridSelectionMode.Multiple"
+            PageSizeSelectorAllRowsItemVisible="true"
+            EditMode="GridEditMode.PopupEditForm"
+            SelectedDataItems="@SelectedDataItems"
+            SelectedDataItemsChanged="OnSelectedDataItemsChanged"
+            FocusedRowEnabled=true
+            PopupEditFormCssClass="my-style"
+            PopupEditFormHeaderText="@title"
+            @ref=MyGrid>
         <Columns>
             <DxGridSelectionColumn ShowInColumnChooser="false" Width="50"></DxGridSelectionColumn>
             <!-- Cột ID, kiểu uniqueidentifier -->
-            <DxGridDataColumn Caption="ID" FieldName="Id" Visible="false" />
+            <DxGridDataColumn Caption="Mã ID" FieldName="Id" Visible="false" />
 
             <!-- Cột ISBN, kiểu char -->
-            <DxGridDataColumn Caption="ISBN" FieldName="Isbn" Width="100" />
+            <DxGridDataColumn Caption="Mã ISBN" FieldName="Isbn" Width="100" />
 
             <!-- Cột Title, kiểu nvarchar -->
-            <DxGridDataColumn Caption="Title" FieldName="Title" Width="200" />
+            <DxGridDataColumn Caption="Tiêu đề" FieldName="Title" Width="200" />
 
             <!-- Cột Category ID, kiểu uniqueidentifier -->
-            <DxGridDataColumn Caption="Category">
+            <DxGridDataColumn Caption="Thể loại">
                 <FilterRowCellTemplate>
                     <DxComboBox Data="@categories"
-                    @bind-Value="filterCategory"
+                                @bind-Value="filterCategory"
                                 SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                    TextFieldName="@nameof(selectedCategory.Name)"
-                    SelectedItemChanged="(Category value)=>SelectedCategoryFilter(value)">
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                TextFieldName="@nameof(selectedCategory.Name)"
+                                SelectedItemChanged="(Category value)=>SelectedCategoryFilter(value)">
                     </DxComboBox>
                 </FilterRowCellTemplate>
                 <CellDisplayTemplate>
@@ -75,14 +74,14 @@ else
             </DxGridDataColumn>
 
             <!-- Cột Author ID, kiểu uniqueidentifier -->
-            <DxGridDataColumn Caption="Author">
+            <DxGridDataColumn Caption="Tác giả">
                 <FilterRowCellTemplate>
                     <DxComboBox Data="@authors"
-                    @bind-Value="filterAuthor"
+                                @bind-Value="filterAuthor"
                                 SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                    TextFieldName="@nameof(selectedAuthor.Name)"
-                    SelectedItemChanged="(Author value)=>SelectedAuthorFilter(value)">
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                TextFieldName="@nameof(selectedAuthor.Name)"
+                                SelectedItemChanged="(Author value)=>SelectedAuthorFilter(value)">
                     </DxComboBox>
                 </FilterRowCellTemplate>
                 <CellDisplayTemplate>
@@ -95,14 +94,14 @@ else
             </DxGridDataColumn>
 
             <!-- Cột Publisher ID, kiểu uniqueidentifier -->
-            <DxGridDataColumn Caption="Publisher">
+            <DxGridDataColumn Caption="Nhà xuất bản">
                 <FilterRowCellTemplate>
                     <DxComboBox Data="@publishers"
-                    @bind-Value="filterPublisher"
+                                @bind-Value="filterPublisher"
                                 SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                    TextFieldName="@nameof(selectedPublisher.Name)"
-                    SelectedItemChanged="(Publisher value)=>SelectedPublisherFilter(value)">
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                TextFieldName="@nameof(selectedPublisher.Name)"
+                                SelectedItemChanged="(Publisher value)=>SelectedPublisherFilter(value)">
                     </DxComboBox>
                 </FilterRowCellTemplate>
                 <CellDisplayTemplate>
@@ -115,69 +114,70 @@ else
             </DxGridDataColumn>
 
             <!-- Cột Year of Publication, kiểu smallint -->
-            <DxGridDataColumn Caption="Year of Publication" FieldName="YearOfPublication" Width="80" DisplayFormat="########" />
+            <DxGridDataColumn Caption="Năm xuất bản" FieldName="YearOfPublication" Width="80" DisplayFormat="########" />
 
             <!-- Cột Price, kiểu decimal -->
-            <DxGridDataColumn Caption="Price" FieldName="Price" Width="80"/>
+            <DxGridDataColumn Caption="Giá" FieldName="Price" Width="80" />
 
-            <!-- Cột Image, kiểu varchar -->
             <!-- Cột Quantity, kiểu int -->
-            <DxGridDataColumn Caption="Quantity" FieldName="Quantity" Width="80" DisplayFormat="N0" />
-            <DxGridDataColumn Caption="Is Deleted" FieldName="isDeleted" Width="80" />
-            <DxGridDataColumn Caption="Image" >
+            <DxGridDataColumn Caption="Số lượng" FieldName="Quantity" Width="80" DisplayFormat="N0" />
+
+            <DxGridDataColumn Caption="Đã xóa" FieldName="isDeleted" Width="80" />
+
+            <DxGridDataColumn Caption="Hình ảnh">
                 <CellDisplayTemplate>
                     @{
                         var data = (Book)context.DataItem;
-
                     }
-                    <img src="@data.Image" style="width: 70px; height:70px;"/>
+                    <img src="@data.Image" style="width: 70px; height:70px;" alt="Ảnh sách" />
                 </CellDisplayTemplate>
             </DxGridDataColumn>
         </Columns>
 
         <ToolbarTemplate>
             <DxToolbar>
-                <DxToolbarItem Text="Create"
-                IconCssClass="oi oi-plus"
-                CssClass="me-2 create HButton"
-                Click="OnCreateNew"/>
+                <DxToolbarItem Text="Tạo mới"
+                               IconCssClass="oi oi-plus"
+                               CssClass="me-2 create HButton"
+                               Click="OnCreateNew" />
 
-                <DxToolbarItem Text="View"
-                IconCssClass="oi oi-pencil"
-                CssClass="me-2 edit HButton"
-                Click="OnEdit" />
+                <DxToolbarItem Text="Xem / Sửa"
+                               IconCssClass="oi oi-pencil"
+                               CssClass="me-2 edit HButton"
+                               Click="OnEdit" />
 
-                <DxToolbarItem Text="Delete"
-                IconCssClass="oi oi-trash"
-                CssClass="me-2 delete HButton"
-                Click="OnDelete" />
-                <DxToolbarItem Text="Order"
-                IconCssClass="fa-solid fa-cart-shopping"
-                CssClass="me-2 order HButton"
-                Click="OnOrder" />
+                <DxToolbarItem Text="Xóa"
+                               IconCssClass="oi oi-trash"
+                               CssClass="me-2 delete HButton"
+                               Click="OnDelete" />
 
-                <DxToolbarItem Text="Column Chooser"
-                IconCssClass="oi oi-cog"
-                CssClass="column-chooser-button ms-3 chooser-column HButton"
-                BeginGroup="true"
-                Click="OnShowColumnChooser" />
+                <DxToolbarItem Text="Đặt hàng"
+                               IconCssClass="fa-solid fa-cart-shopping"
+                               CssClass="me-2 order HButton"
+                               Click="OnOrder" />
+
+                <DxToolbarItem Text="Chọn cột"
+                               IconCssClass="oi oi-cog"
+                               CssClass="column-chooser-button ms-3 chooser-column HButton"
+                               BeginGroup="true"
+                               Click="OnShowColumnChooser" />
 
                 <DxToolbarItem BeginGroup="true"
-                Alignment="ToolbarItemAlignment.Right">
+                               Alignment="ToolbarItemAlignment.Right">
                     <Template Context="itemContext">
                         <div class="d-flex flex-row align-items-center h-100">
                             <DxSearchBox CssClass="search py-0" style="width:400px;"
-                            Text="@searchText"
-                            InputDelay="1000"
-                            TextChanged="@Search"
-                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                            aria-label="Search" />
+                                         Text="@searchText"
+                                         InputDelay="1000"
+                                         TextChanged="@Search"
+                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                         aria-label="Tìm kiếm sách" />
                         </div>
                     </Template>
                 </DxToolbarItem>
             </DxToolbar>
-
         </ToolbarTemplate>
+
         <EditFormTemplate Context="editFormContext">
             <DxFormLayout CssClass="my-form-layout">
 
@@ -187,7 +187,7 @@ else
 
                         <!-- ISBN -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="ISBN:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Mã ISBN:" CssClass="custom-item">
                                 <DxTextBox @bind-Text="@selectedItem.Isbn" CssClass="form-control-solid control" />
                                 <ValidationMessage For="@(() => selectedItem.Isbn)" />
                             </DxFormLayoutItem>
@@ -195,7 +195,7 @@ else
 
                         <!-- Title -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Title:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Tiêu đề:" CssClass="custom-item">
                                 <DxTextBox @bind-Text="@selectedItem.Title" CssClass="form-control-solid control" />
                                 <ValidationMessage For="@(() => selectedItem.Title)" />
                             </DxFormLayoutItem>
@@ -203,65 +203,64 @@ else
 
                         <!-- Category -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Category:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Thể loại:" CssClass="custom-item">
                                 <DxComboBox Data="@categories"
-                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                                @bind-Value="@selectedItem.categoryId"
-                                TextFieldName="@nameof(selectedCategory.Name)"
-                                ValueFieldName="@nameof(selectedCategory.id)" />
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                            @bind-Value="@selectedItem.categoryId"
+                                            TextFieldName="@nameof(selectedCategory.Name)"
+                                            ValueFieldName="@nameof(selectedCategory.id)" />
                                 <ValidationMessage For="@(() => selectedItem.categoryId)" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Author -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Author:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Tác giả:" CssClass="custom-item">
                                 <DxComboBox Data="@authors"
-                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                                @bind-Value="@selectedItem.authorId"
-                                TextFieldName="@nameof(selectedAuthor.Name)"
-                                ValueFieldName="@nameof(selectedAuthor.id)" />
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                            @bind-Value="@selectedItem.authorId"
+                                            TextFieldName="@nameof(selectedAuthor.Name)"
+                                            ValueFieldName="@nameof(selectedAuthor.id)" />
                                 <ValidationMessage For="@(() => selectedItem.authorId)" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Publisher -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Publisher:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Nhà xuất bản:" CssClass="custom-item">
                                 <DxComboBox Data="@publishers"
-                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                                @bind-Value="@selectedItem.publisherId"
-                                TextFieldName="@nameof(selectedPublisher.Name)"
-                                ValueFieldName="@nameof(selectedPublisher.id)" />
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                            @bind-Value="@selectedItem.publisherId"
+                                            TextFieldName="@nameof(selectedPublisher.Name)"
+                                            ValueFieldName="@nameof(selectedPublisher.id)" />
                                 <ValidationMessage For="@(() => selectedItem.publisherId)" />
-
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Year of Publication -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Year of Publication:">
-                                <DxSpinEdit @bind-Value="@selectedItem.YearOfPublication" MinValue="1901" MaxValue="2100" style="min-width:100px;"/>
+                            <DxFormLayoutItem Caption="Năm xuất bản:">
+                                <DxSpinEdit @bind-Value="@selectedItem.YearOfPublication" MinValue="1901" MaxValue="2100" style="min-width:100px;" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Quantity -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Quantity:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Số lượng:" CssClass="custom-item">
                                 <DxSpinEdit @bind-Value="@selectedItem.Quantity" MinValue="0" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Price -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Price:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Giá:" CssClass="custom-item">
                                 <DxSpinEdit @bind-Value="@selectedItem.Price" DisplayFormat="N0" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Image -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Image URL:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="URL hình ảnh:" CssClass="custom-item">
                                 <DxTextBox @bind-Text="@selectedItem.Image" CssClass="form-control-solid control" />
                                 <ValidationMessage For="@(() => selectedItem.Image)" />
                             </DxFormLayoutItem>
@@ -269,123 +268,124 @@ else
 
                         <!-- Is Deleted -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Is Deleted:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Đã xóa:" CssClass="custom-item">
                                 <DxCheckBox @bind-Checked="@selectedItem.isDeleted" />
                             </DxFormLayoutItem>
                         </div>
                     </div>
-                    <img src="@selectedItem.Image" style="width :200px; height:200px; " alt="Alternate Text" />
-
+                    <img src="@selectedItem.Image" style="width:200px; height:200px;" alt="Ảnh sách" />
                 }
                 else
                 {
                     <div class="row">
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Customer:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Khách hàng:" CssClass="custom-item">
                                 <DxComboBox Data="@customersCreate" Id="CustomerComboboxId"
-                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                                @bind-Value="@orderItem.CustomerId"
-                                TextFieldName="@nameof(selectedCustomer.FullName)"
-                                SelectedItemChanged="(Customer? data)=> OnChangeCustomer(data)"
-                                ValueFieldName="@nameof(selectedCustomer.id)" />
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                            @bind-Value="@orderItem.CustomerId"
+                                            TextFieldName="@nameof(selectedCustomer.FullName)"
+                                            SelectedItemChanged="(Customer? data)=> OnChangeCustomer(data)"
+                                            ValueFieldName="@nameof(selectedCustomer.id)" />
                             </DxFormLayoutItem>
                         </div>
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="SĐT:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Số điện thoại:" CssClass="custom-item">
                                 <DxTextBox @bind-Text="@selectedCustomer.phone" Enabled="false" />
                             </DxFormLayoutItem>
                         </div>
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Day of bitrh:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Ngày sinh:" CssClass="custom-item">
                                 <DxDateEdit @bind-Date="@selectedCustomer.dateOfBirth" Enabled="false" />
                             </DxFormLayoutItem>
                         </div>
+
                         <!-- Promotion -->
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Promotion:" CssClass="custom-item">
-                                <DxComboBox Data="@promotionsCreate"  Id="PromotionComboboxId"
+                            <DxFormLayoutItem Caption="Khuyến mãi:" CssClass="custom-item">
+                                <DxComboBox Data="@promotionsCreate" Id="PromotionComboboxId"
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                            @bind-Value="@orderItem.PromotionId"
+                                            TextFieldName="@nameof(selectedPromotion.name)"
+                                            ValueFieldName="@nameof(selectedPromotion.id)"
+                                            SelectedItemChanged="(Promotion? data)=> OnChangePromotion(data)" />
+                            </DxFormLayoutItem>
+                        </div>
 
-                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                                @bind-Value="@orderItem.PromotionId"
-                                TextFieldName="@nameof(selectedPromotion.name)"
-                                ValueFieldName="@nameof(selectedPromotion.id)"
-                                SelectedItemChanged="(Promotion? data)=> OnChangePromotion(data)" />
-                            </DxFormLayoutItem>
-                        </div>
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Condition:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Điều kiện:" CssClass="custom-item">
                                 <DxSpinEdit @bind-Value="@selectedPromotion.condition" Mask="###,###,###,###,##0"
-                                DisplayFormat="{0:n0}" Id="condition"
-                                Enabled="false" ShowSpinButtons="false" />
+                                            DisplayFormat="{0:n0}" Id="condition"
+                                            Enabled="false" ShowSpinButtons="false" />
                             </DxFormLayoutItem>
                         </div>
+
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Discount percent(%):" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Phần trăm giảm giá (%):" CssClass="custom-item">
                                 @{
                                     string abc = $"{(@selectedPromotion.discountPercent * 100).ToString()}%";
                                 }
-                                <DxTextBox @bind-Text="@abc" Enabled="false" Id="discount"/>
+                                <DxTextBox @bind-Text="@abc" Enabled="false" Id="discount" />
                             </DxFormLayoutItem>
                         </div>
+
                         <div class="col-lg-6 col-sm-12">
-                            <DxFormLayoutItem Caption="Remaining quantity:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Số lượng còn lại:" CssClass="custom-item">
                                 <DxSpinEdit @bind-Value="@selectedPromotion.quantity"
                                             Enabled="false" Id="quantity"
-                                ShowSpinButtons="false" />
+                                            ShowSpinButtons="false" />
                             </DxFormLayoutItem>
                         </div>
 
                         <div class="col-lg-6 col-sm-12" style="margin-left:12px;">
-                            <h4> Order Item:</h4>
+                            <h4> Chi tiết đơn hàng:</h4>
                         </div>
+
                         <div class="col-lg-12 col-sm-12">
-                            <DxFormLayoutItem Caption="Sum:" CssClass="custom-item">
+                            <DxFormLayoutItem Caption="Tổng tiền:" CssClass="custom-item">
                                 <DxSpinEdit @bind-Value="@sum" Mask="###,###,###,###,##0"
-                                Enabled="false" Id="sum"
-                                ShowSpinButtons="false" />
+                                            Enabled="false" Id="sum"
+                                            ShowSpinButtons="false" />
                             </DxFormLayoutItem>
                         </div>
+
                         @foreach (var item in ListOrderItem)
                         {
                             <div class="col-4">
-                                <DxFormLayoutItem Caption="Book:" CssClass="custom-item">
+                                <DxFormLayoutItem Caption="Sách:" CssClass="custom-item">
                                     <DxComboBox Data="@books"
-                                    SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                                    @bind-Value="@item.BookId"
-                                    TextFieldName="@nameof(selectedBook.Title)"
-                                    ValueFieldName="@nameof(selectedBook.id)"
-                                    SelectedItemChanged="(Book data)=> OnChangeBook(item, data)" />
+                                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                                @bind-Value="@item.BookId"
+                                                TextFieldName="@nameof(selectedBook.Title)"
+                                                ValueFieldName="@nameof(selectedBook.id)"
+                                                SelectedItemChanged="(Book data)=> OnChangeBook(item, data)" />
                                 </DxFormLayoutItem>
                             </div>
                             <div class="col-4">
-                                <DxFormLayoutItem Caption="Quantity:" CssClass="custom-item">
+                                <DxFormLayoutItem Caption="Số lượng:" CssClass="custom-item">
                                     <DxSpinEdit Value="@item.Quantity" Id="quantityBookId"
-                                    ValueChanged="@((int newValue) => OnQuantityChanged(newValue, item))"
-                                    ValueExpression="@(() => item.Quantity)"
-                                    MinValue="1" />
+                                                ValueChanged="@((int newValue) => OnQuantityChanged(newValue, item))"
+                                                ValueExpression="@(() => item.Quantity)"
+                                                MinValue="1" />
                                 </DxFormLayoutItem>
                             </div>
                             <div class="col-4">
-                                <DxFormLayoutItem Caption="Price:" CssClass="custom-item">
+                                <DxFormLayoutItem Caption="Giá:" CssClass="custom-item">
                                     <DxSpinEdit @bind-Value="@item.Price" Mask="###,###,###,###,##0"
-                                    DisplayFormat="{0:n0}" Id="priceBook"
-                                    MaxValue="999999999999999"
-                                    MinValue="10000"
-                                    Enabled="false" />
+                                                DisplayFormat="{0:n0}" Id="priceBook"
+                                                MaxValue="999999999999999"
+                                                MinValue="10000"
+                                                Enabled="false" />
                                 </DxFormLayoutItem>
                             </div>
                         }
                         <div class="col-12" style="margin: 12px 20px 0 0;">
                             <DxButton Click="@AddOrderItem"
-                            Text="Add Item"
-                            IconCssClass="fa-solid fa-plus icon-bt"
-                            CssClass="displayStyle btn-success" />
-
+                                      Text="Thêm sản phẩm"
+                                      IconCssClass="fa-solid fa-plus icon-bt"
+                                      CssClass="displayStyle btn-success" />
                         </div>
                     </div>
-
                 }
-
             </DxFormLayout>
         </EditFormTemplate>
     </DxGrid>

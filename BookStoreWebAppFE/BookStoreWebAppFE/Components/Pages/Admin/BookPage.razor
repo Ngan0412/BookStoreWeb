@@ -188,7 +188,7 @@ else
                         <!-- ISBN -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Mã ISBN:" CssClass="custom-item">
-                                <DxTextBox @bind-Text="@selectedItem.Isbn" CssClass="form-control-solid control" />
+                                <DxTextBox @bind-Text="@selectedItem.Isbn" Id="Isbn" CssClass="form-control-solid control" />
                                 <ValidationMessage For="@(() => selectedItem.Isbn)" />
                             </DxFormLayoutItem>
                         </div>
@@ -196,7 +196,7 @@ else
                         <!-- Title -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Tiêu đề:" CssClass="custom-item">
-                                <DxTextBox @bind-Text="@selectedItem.Title" CssClass="form-control-solid control" />
+                                <DxTextBox @bind-Text="@selectedItem.Title" Id="Title" CssClass="form-control-solid control" />
                                 <ValidationMessage For="@(() => selectedItem.Title)" />
                             </DxFormLayoutItem>
                         </div>
@@ -205,7 +205,9 @@ else
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Thể loại:" CssClass="custom-item">
                                 <DxComboBox Data="@categories"
-                                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                            Id="CategoryComboboxId"
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                                            SearchMode="ListSearchMode.AutoSearch"
                                             @bind-Value="@selectedItem.categoryId"
                                             TextFieldName="@nameof(selectedCategory.Name)"
                                             ValueFieldName="@nameof(selectedCategory.id)" />
@@ -217,7 +219,9 @@ else
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Tác giả:" CssClass="custom-item">
                                 <DxComboBox Data="@authors"
-                                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                            Id="AuthorComboboxId"
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                                            SearchMode="ListSearchMode.AutoSearch"
                                             @bind-Value="@selectedItem.authorId"
                                             TextFieldName="@nameof(selectedAuthor.Name)"
                                             ValueFieldName="@nameof(selectedAuthor.id)" />
@@ -229,7 +233,9 @@ else
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Nhà xuất bản:" CssClass="custom-item">
                                 <DxComboBox Data="@publishers"
-                                            SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
+                                            Id="PublisherComboboxId"
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                                            SearchMode="ListSearchMode.AutoSearch"
                                             @bind-Value="@selectedItem.publisherId"
                                             TextFieldName="@nameof(selectedPublisher.Name)"
                                             ValueFieldName="@nameof(selectedPublisher.id)" />
@@ -240,28 +246,32 @@ else
                         <!-- Year of Publication -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Năm xuất bản:">
-                                <DxSpinEdit @bind-Value="@selectedItem.YearOfPublication" MinValue="1901" MaxValue="2100" style="min-width:100px;" />
+                                <DxSpinEdit @bind-Value="@selectedItem.YearOfPublication"
+                                            Id="YearOfPublication"
+                                            MinValue="0"
+                                            MaxValue="3000"
+                                            style="min-width:100px;" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Quantity -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Số lượng:" CssClass="custom-item">
-                                <DxSpinEdit @bind-Value="@selectedItem.Quantity" MinValue="0" />
+                                <DxSpinEdit @bind-Value="@selectedItem.Quantity" Id="Quantity" MinValue="0" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Price -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Giá:" CssClass="custom-item">
-                                <DxSpinEdit @bind-Value="@selectedItem.Price" DisplayFormat="N0" />
+                                <DxSpinEdit @bind-Value="@selectedItem.Price" Id="Price" DisplayFormat="N0" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Image -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="URL hình ảnh:" CssClass="custom-item">
-                                <DxTextBox @bind-Text="@selectedItem.Image" CssClass="form-control-solid control" />
+                                <DxTextBox @bind-Text="@selectedItem.Image" Id="Image" CssClass="form-control-solid control" />
                                 <ValidationMessage For="@(() => selectedItem.Image)" />
                             </DxFormLayoutItem>
                         </div>
@@ -269,11 +279,12 @@ else
                         <!-- Is Deleted -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Đã xóa:" CssClass="custom-item">
-                                <DxCheckBox @bind-Checked="@selectedItem.isDeleted" />
+                                <DxCheckBox @bind-Checked="@selectedItem.isDeleted" Id="IsDeletedCheckbox" />
                             </DxFormLayoutItem>
                         </div>
                     </div>
-                    <img src="@selectedItem.Image" style="width:200px; height:200px;" alt="Ảnh sách" />
+
+                    <img src="@selectedItem.Image" style="width:200px; height:200px;" alt="Alternate Text" />
                 }
                 else
                 {
@@ -543,6 +554,8 @@ else
                 });
         }
         else{
+            e.Cancel = true;
+
             if (string.IsNullOrEmpty(result?.Message))
             {
                 string errorContent = await response.Content.ReadAsStringAsync();

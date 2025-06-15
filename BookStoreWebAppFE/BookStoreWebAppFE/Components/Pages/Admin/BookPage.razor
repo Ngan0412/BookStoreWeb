@@ -188,7 +188,7 @@ else
                         <!-- ISBN -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="ISBN:" CssClass="custom-item">
-                                <DxTextBox @bind-Text="@selectedItem.Isbn" CssClass="form-control-solid control" />
+                                <DxTextBox @bind-Text="@selectedItem.Isbn" Id="Isbn" CssClass="form-control-solid control" />
                                 <ValidationMessage For="@(() => selectedItem.Isbn)" />
                             </DxFormLayoutItem>
                         </div>
@@ -196,7 +196,7 @@ else
                         <!-- Title -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Title:" CssClass="custom-item">
-                                <DxTextBox @bind-Text="@selectedItem.Title" CssClass="form-control-solid control" />
+                                <DxTextBox @bind-Text="@selectedItem.Title" Id="Title" CssClass="form-control-solid control" />
                                 <ValidationMessage For="@(() => selectedItem.Title)" />
                             </DxFormLayoutItem>
                         </div>
@@ -205,10 +205,12 @@ else
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Category:" CssClass="custom-item">
                                 <DxComboBox Data="@categories"
-                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                                @bind-Value="@selectedItem.categoryId"
-                                TextFieldName="@nameof(selectedCategory.Name)"
-                                ValueFieldName="@nameof(selectedCategory.id)" />
+                                            Id="CategoryComboboxId"
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                                            SearchMode="ListSearchMode.AutoSearch"
+                                            @bind-Value="@selectedItem.categoryId"
+                                            TextFieldName="@nameof(selectedCategory.Name)"
+                                            ValueFieldName="@nameof(selectedCategory.id)" />
                                 <ValidationMessage For="@(() => selectedItem.categoryId)" />
                             </DxFormLayoutItem>
                         </div>
@@ -217,10 +219,12 @@ else
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Author:" CssClass="custom-item">
                                 <DxComboBox Data="@authors"
-                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                                @bind-Value="@selectedItem.authorId"
-                                TextFieldName="@nameof(selectedAuthor.Name)"
-                                ValueFieldName="@nameof(selectedAuthor.id)" />
+                                            Id="AuthorComboboxId"
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                                            SearchMode="ListSearchMode.AutoSearch"
+                                            @bind-Value="@selectedItem.authorId"
+                                            TextFieldName="@nameof(selectedAuthor.Name)"
+                                            ValueFieldName="@nameof(selectedAuthor.id)" />
                                 <ValidationMessage For="@(() => selectedItem.authorId)" />
                             </DxFormLayoutItem>
                         </div>
@@ -229,40 +233,45 @@ else
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Publisher:" CssClass="custom-item">
                                 <DxComboBox Data="@publishers"
-                                SearchFilterCondition="ListSearchFilterCondition.Contains" SearchMode="ListSearchMode.AutoSearch"
-                                @bind-Value="@selectedItem.publisherId"
-                                TextFieldName="@nameof(selectedPublisher.Name)"
-                                ValueFieldName="@nameof(selectedPublisher.id)" />
+                                            Id="PublisherComboboxId"
+                                            SearchFilterCondition="ListSearchFilterCondition.Contains"
+                                            SearchMode="ListSearchMode.AutoSearch"
+                                            @bind-Value="@selectedItem.publisherId"
+                                            TextFieldName="@nameof(selectedPublisher.Name)"
+                                            ValueFieldName="@nameof(selectedPublisher.id)" />
                                 <ValidationMessage For="@(() => selectedItem.publisherId)" />
-
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Year of Publication -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Year of Publication:">
-                                <DxSpinEdit @bind-Value="@selectedItem.YearOfPublication" MinValue="1901" MaxValue="2100" style="min-width:100px;"/>
+                                <DxSpinEdit @bind-Value="@selectedItem.YearOfPublication"
+                                            Id="YearOfPublication"
+                                            MinValue="0"
+                                            MaxValue="3000"
+                                            style="min-width:100px;" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Quantity -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Quantity:" CssClass="custom-item">
-                                <DxSpinEdit @bind-Value="@selectedItem.Quantity" MinValue="0" />
+                                <DxSpinEdit @bind-Value="@selectedItem.Quantity" Id="Quantity" MinValue="0" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Price -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Price:" CssClass="custom-item">
-                                <DxSpinEdit @bind-Value="@selectedItem.Price" DisplayFormat="N0" />
+                                <DxSpinEdit @bind-Value="@selectedItem.Price" Id="Price" DisplayFormat="N0" />
                             </DxFormLayoutItem>
                         </div>
 
                         <!-- Image -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Image URL:" CssClass="custom-item">
-                                <DxTextBox @bind-Text="@selectedItem.Image" CssClass="form-control-solid control" />
+                                <DxTextBox @bind-Text="@selectedItem.Image" Id="Image" CssClass="form-control-solid control" />
                                 <ValidationMessage For="@(() => selectedItem.Image)" />
                             </DxFormLayoutItem>
                         </div>
@@ -270,12 +279,12 @@ else
                         <!-- Is Deleted -->
                         <div class="col-lg-6 col-sm-12">
                             <DxFormLayoutItem Caption="Is Deleted:" CssClass="custom-item">
-                                <DxCheckBox @bind-Checked="@selectedItem.isDeleted" />
+                                <DxCheckBox @bind-Checked="@selectedItem.isDeleted" Id="IsDeletedCheckbox" />
                             </DxFormLayoutItem>
                         </div>
                     </div>
-                    <img src="@selectedItem.Image" style="width :200px; height:200px; " alt="Alternate Text" />
 
+                    <img src="@selectedItem.Image" style="width:200px; height:200px;" alt="Alternate Text" />
                 }
                 else
                 {

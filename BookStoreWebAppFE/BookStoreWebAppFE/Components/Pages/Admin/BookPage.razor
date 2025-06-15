@@ -552,6 +552,8 @@ else
                 });
         }
         else{
+            e.Cancel = true;
+
             if (string.IsNullOrEmpty(result?.Message))
             {
                 string errorContent = await response.Content.ReadAsStringAsync();
